@@ -8,7 +8,6 @@ import banner from "../assets/banner.png";
 import ProductCard from "../components/NavbarFolder/ProductCard";
 import BestSellingProducts from "../components/NavbarFolder/BestSellingProducts";
 import Categories from "../components/NavbarFolder/Categories";
-import React from 'react';
 
 
 const Home = () => {
@@ -33,7 +32,7 @@ const Home = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch(backendUrl + '/api/product/list'); // API to fetch products
+        const response = await fetch('https://api.shoopers-ecommerce.vercel.app/api/product/list'); // API to fetch products
         const data = await response.json();
         
         if (Array.isArray(data.products)) {
