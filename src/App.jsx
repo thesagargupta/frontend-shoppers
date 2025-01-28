@@ -13,7 +13,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Error from "./pages/Error";
 import "font-awesome/css/font-awesome.min.css";
 import ProductPage from "./pages/ProductPage";
-import CategoryPage from "./pages/Categorypage";
+import CategoryPage from "./pages/CategoryPage";
 import PlaceOrder from "./pages/PlaceOrder";
 import React from 'react';
 import ScrollToTop from "./pages/ScrollToTop";
