@@ -89,6 +89,7 @@ const Navbar = () => {
                 About
               </NavLink>
             </li>
+
           </ul>
         </div>
 
