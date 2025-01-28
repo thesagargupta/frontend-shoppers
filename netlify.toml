@@ -1,4 +1,17 @@
+# Netlify configuration file for your project
+
+[build]
+  # The directory where your built site is located
+  publish = "dist"
+  # The build command (optional, use if you need to run a build step)
+  command = "npm run build" # Change this if your build command is different
+
+# Redirect rules
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+  force = true
+
+# Optionally, if you want to specify headers or additional configurations,
+# you can include them here as well.
