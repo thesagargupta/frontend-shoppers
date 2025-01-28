@@ -8,7 +8,7 @@ export default defineConfig({
     port: 5173, // You can set a specific port if needed
     proxy: {
       "/api": {
-        target: "http://localhost:9001",
+        target: "https://shoopers-ecommerce.vercel.app/",
         changeOrigin: true,
       },
     },
