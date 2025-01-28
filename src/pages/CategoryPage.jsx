@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { ShopContext } from "../context/ShopContext";
 import { useParams } from "react-router-dom";
-import ProductCard from "../components/Navbar/ProductCard";
+import ProductCard from "../components/navbar/ProductCard";
 import "./Categorypage.css";
 import Breadcrumbs from "./Breadcrumbs";
 import React from 'react';
