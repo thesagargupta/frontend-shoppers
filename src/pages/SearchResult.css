@@ -1,0 +1,20 @@
+.search-page {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    max-width: 1200px;
+    margin: 30px auto;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.search-result-heading {
+    text-align: center;
+    font-family: 'Poppins', sans-serif; /* Use a clean, modern font */
+    font-size: 2rem; /* Adjust size for prominence */
+    font-weight: 600; /* Semi-bold for emphasis */
+    color: #333; /* Neutral, readable color */
+    margin-bottom: 20px; /* Space below the heading */
+}
+

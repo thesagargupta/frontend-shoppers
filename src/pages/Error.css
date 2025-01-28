@@ -1,0 +1,76 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.corner {
+  padding-left: 50px;
+  padding-top: 30px;
+  text-decoration: none;
+}
+
+.Home a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.Home a:hover {
+  text-decoration: none;
+  color: red;
+  cursor: pointer;
+}
+
+.main-cont {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+}
+
+.head {
+  font-size: 100px;
+}
+
+.home-back .back-btn {
+  background-color: #DB4444;
+  /* Green background color */
+  color: white;
+  /* White text color */
+  border: none;
+  /* Remove border */
+  padding: 10px 20px;
+  /* Add padding */
+  font-size: 16px;
+  /* Set font size */
+  cursor: pointer;
+  /* Show pointer cursor on hover */
+  border-radius: 5px;
+  /* Round the corners */
+  transition: background-color 0.3s ease;
+  /* Smooth color transition */
+  display: block !important;
+}
+
+.home-back .back-btn:hover {
+  background-color: #45a049;
+  /* Darker green on hover */
+}
+
+.home-back .back-btn:focus {
+  outline: none;
+  /* Remove focus outline */
+}
+
+@media (max-width: 768px) {
+  .head {
+    font-size: 70px;
+  }
+}
+
+@media (max-width: 480px) {
+  .head {
+    font-size: 50px;
+  }
+}

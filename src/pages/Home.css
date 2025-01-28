@@ -1,0 +1,156 @@
+.container {
+    margin-top: 10px; 
+  }
+  
+  .carousel-caption h3 {
+    font-size: 2rem;
+    color: #fff;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);
+  }
+  
+  
+ .col-md-3{
+    border-right: 2px solid black;
+  }
+
+  .head-time{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+.carousel-caption {
+  position: absolute;
+  bottom: -0.75rem !important;
+  bottom: 20px; 
+  left: 50% !important;
+  transform: translateX(-50%);
+  width: 90%; 
+  text-align: center;
+  color: #fff; 
+  z-index: 10;
+  padding: 0 15px;
+  box-sizing: border-box; 
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+}
+
+.carousel-caption h1 {
+  margin: 0;
+  font-weight: 700;
+  font-size: 3rem; /* Default size for large screens */
+  line-height: 1.4;
+  color: #FFD700; 
+  word-wrap: break-word; 
+}
+
+.carousel-caption p {
+  margin-top: 10px;
+  font-size: 1.25rem; /* Default size for large screens */
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.4;
+  color: #f1f1f1; /* Slightly lighter color for description */
+  word-wrap: break-word; /* Prevent text from overflowing */
+}
+
+/* Large Screen (Desktop View) */
+@media (min-width: 1200px) {
+  .carousel-caption h1 {
+    font-size: 3.5rem;  /* Larger title for desktops */
+  }
+
+  .carousel-caption p {
+    font-size: 1.5rem;
+  }
+}
+
+/* Medium Screen (Tablet View) */
+@media (max-width: 1024px) {
+  .carousel-caption h1 {
+    font-size: 2.25rem; /* Medium title size for tablets */
+  }
+
+  .carousel-caption p {
+    font-size: 1.125rem; /* Slightly smaller text for tablets */
+    max-width: 90%; /* Ensure the text fits inside */
+  }
+}
+
+/* Small Screen (Mobile View) */
+@media (max-width: 768px) {
+  .carousel-caption h1 {
+    font-size: 1.75rem; /* Smaller title for mobile screens */
+  }
+
+  .carousel-caption p {
+    font-size: 1rem;  /* Smaller text for mobile */
+    max-width: 95%;
+  }
+}
+
+/* Extra Small Screen (Very small mobile screens) */
+@media (max-width: 480px) {
+  .carousel-caption {
+    display: none;
+  }
+}
+
+/* Optional: Text Shadow for Better Visibility */
+.carousel-caption h1,
+.carousel-caption p {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Adds shadow to text */
+}
+
+/* Ensure the carousel container has appropriate padding */
+.carousel-item {
+  position: relative;
+}
+
+.carousel-item img {
+  width: 100%; /* Ensure the image covers the container */
+  height: auto; /* Maintain aspect ratio */
+}
+
+.category-list{
+  font-family: 'Poppins', sans-serif;
+}
+.flash-sales-section {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0px;
+}
+
+.countdown-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  background-color: #f1f1f1;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.row>*{
+  padding-bottom: 15px !important;
+  padding-right: 0 !important; 
+  padding-left: 0 !important;
+  padding-top: 5px !important;
+}
+
+.countdown-timer {
+  font-size: 30px;
+  color: #f44336;
+  font-weight: 700;
+  margin-top: 10px;
+}
+.col-md-3 {
+  flex: 0 0 auto;
+  width: 90%;
+  justify-content: center;
+  display: flex;
+}

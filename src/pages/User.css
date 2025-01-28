@@ -1,0 +1,168 @@
+/* User Dashboard Styles */
+.user-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    background-color: #f7f7f7;
+    padding: 40px;
+  }
+  
+  .user-card {
+    width: 100%;
+    max-width: 800px;
+    background-color: white;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 30px;
+    position: relative; /* Set the container to relative positioning */
+
+  }
+  
+  .user-welcome {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .user-info {
+    margin-bottom: 20px;
+  }
+  
+  .user-info h3 {
+    font-size: 20px;
+    margin-bottom: 5px;
+  }
+  
+  .user-info p {
+    font-size: 16px;
+    color: #555;
+  }
+  
+  .user-actions {
+    margin-bottom: 30px;
+  }
+  
+  .logout-button,
+  .edit-profile-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 10px;
+    display: block !important;
+  }
+  
+  .logout-button:hover,
+  .edit-profile-button:hover {
+    background-color: #c0392b;
+  }
+  
+  .edit-profile-section {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .edit-profile-section input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+  }
+  
+  .save-changes-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #2ecc71;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    display:  block !important;
+  }
+  
+  .save-changes-button:hover {
+    background-color: #27ae60;
+  }
+  
+  .user-orders h3 {
+    font-size: 20px;
+    margin-bottom: 15px;
+  }
+  
+  .order-item {
+    background-color: #f1f1f1;
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 8px;
+  }
+  
+  .order-item p {
+    margin: 5px 0;
+  }
+  
+  .loading {
+    text-align: center;
+    color: #777;
+    font-size: 16px;
+  }
+
+.user-icon {
+  position: absolute; /* Position icon absolutely within the user card */
+  top: 20px; /* Adjust this value to move the icon down */
+  right: 20px; /* Adjust this value to move the icon left */
+  width: 50px; /* Size of the icon */
+  height: 50px; /* Size of the icon */
+}
+
+.user-icon-image {
+  width: 100%; /* Make the image fill the container */
+  height: 100%; /* Make the image fill the container */
+  border-radius: 50%; /* Optional, if you want the image to be circular */
+}
+@media (max-width: 768px) {
+
+
+  .user-card {
+    padding: 15px; /* Reduce the padding for smaller screens */
+  }
+
+  .user-welcome {
+    font-size: 1.5rem; /* Reduce the font size of the welcome text */
+  }
+
+  .user-info h3,
+  .user-info p {
+    font-size: 1rem; /* Adjust font sizes for smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+
+
+  .user-card {
+    padding: 10px; /* Reduce padding further on very small screens */
+  }
+
+  .user-welcome {
+    font-size: 1.2rem; /* Further reduce the welcome text size */
+  }
+
+  .user-info h3,
+  .user-info p {
+    font-size: 0.9rem; /* Further adjust font sizes */
+  }
+
+  .edit-profile-section input,
+  .save-changes-button {
+    font-size: 0.9rem; /* Adjust input and button sizes */
+  }
+}

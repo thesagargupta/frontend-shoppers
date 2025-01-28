@@ -1,0 +1,27 @@
+
+.head-cart {
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 30px;
+    color: #333;
+    letter-spacing: 2px;
+    padding-bottom: 10px;
+    font-family: Poppins, sans-serif;
+    }
+@media (max-width: 768px) {
+    .head-cart {
+        font-size: 1.8rem;
+        margin-top: 15px;
+        margin-bottom: 25px;
+    }
+}
+
+@media (max-width: 480px) {
+    .head-cart {
+        font-size: 1.6rem;
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+}

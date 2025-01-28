@@ -1,0 +1,23 @@
+/* Breadcrumbs.css */
+.breadcrumbs {
+    margin: 15px 0;
+    font-size: 14px;
+    font-family: 'Poppins', sans-serif; 
+  }
+  
+  .breadcrumbs a {
+    text-decoration: none;
+    color: #000000;
+    font-family: 'Poppins', sans-serif;
+    padding-left: 2px;
+  }
+  
+  .breadcrumbs a:hover {
+    color: #ff0000; 
+}
+  
+  .breadcrumbs span {
+    color: #555;
+    font-family: 'Poppins', sans-serif; 
+  }
+  
