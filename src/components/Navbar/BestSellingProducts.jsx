@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import ProductCard from './ProductCard';
+import ProductCard from './Productcard';
 import React from 'react';
 
 
