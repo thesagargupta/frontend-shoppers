@@ -5,9 +5,9 @@ import iphoneBan from "../assets/iphone.jpeg";
 import electroBan from "../assets/electronic.jpg";
 import fashion from "../assets/fashion.jpg";
 import banner from "../assets/banner.png";
-import ProductCard from "../components/Navbar/Productcard";
-import BestSellingProducts from "../components/navbar/BestSellingProducts";
-import Categories from "../components/navbar/Categories";
+import ProductCard from "../components/NavbarFolder/ProductCard";
+import BestSellingProducts from "../components/NavbarFolder/BestSellingProducts";
+import Categories from "../components/NavbarFolder/Categories";
 import React from 'react';
 
 
