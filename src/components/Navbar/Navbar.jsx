@@ -89,6 +89,11 @@ const Navbar = () => {
                 About
               </NavLink>
             </li>
+            <li>
+              <NavLink to="/signup" className={({ isActive }) => (isActive ? "active-link" : "")} onClick={handleLinkClick}>
+                Sign Up
+              </NavLink>
+            </li>
           </ul>
         </div>
 
