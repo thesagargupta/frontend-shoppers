@@ -1,46 +1,43 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import "./Signup.css";
 import photo from "../assets/login.png";
 import googleLogo from "../assets/googlw.png";
 import { ShopContext } from "../context/ShopContext";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
-
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const [isLogin, setIsLogin] = useState(false);
-  const { token, setToken, navigate, backendUrl } = useContext(ShopContext);
+  const { setToken, backendUrl } = useContext(ShopContext);
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
+  const [emailOrPhone, setEmailOrPhone] = useState("");
 
   const handleToggleForm = () => {
-    setIsLogin(!isLogin); // Toggle between Login and Signup
+    setIsLogin(!isLogin);
   };
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
     try {
       if (!isLogin) {
-        // Signup request
         const response = await axios.post(`${backendUrl}/api/user/register`, {
           name,
-          email,
+          emailOrPhone,
           password,
         });
 
         if (response.data.success) {
-          setToken(response.data.token);
-          localStorage.setItem("token", response.data.token);
           toast.success("Account created successfully!");
-          setIsLogin(true); // Switch to login form
+          setTimeout(() => setIsLogin(true), 1000);
         } else {
           toast.error(response.data.message);
         }
       } else {
-        // Login request
         const response = await axios.post(`${backendUrl}/api/user/login`, {
-          email,
+          emailOrPhone,
           password,
         });
 
@@ -48,7 +45,7 @@ const Signup = () => {
           setToken(response.data.token);
           localStorage.setItem("token", response.data.token);
           toast.success("Logged in successfully!");
-          navigate("/home");
+          setTimeout(() => navigate("/home"), 1000);
         } else {
           toast.error(response.data.message);
         }
@@ -59,13 +56,6 @@ const Signup = () => {
     }
   };
 
-  useEffect(()=>{
-    if(token){
-      navigate('/home')
-    }
-  })
-
-
   return (
     <div className="signup-container">
       <Toaster position="top-center" reverseOrder={false} />
@@ -73,15 +63,14 @@ const Signup = () => {
 
       <div className="signup-form">
         {isLogin ? (
-          // Login Form
           <>
             <h1>Log in to your account</h1>
             <p>Enter your details below</p>
             <form onSubmit={onSubmitHandler}>
               <input
-                onChange={(e) => setEmail(e.target.value)}
-                value={email}
-                type="email"
+                onChange={(e) => setEmailOrPhone(e.target.value)}
+                value={emailOrPhone}
+                type="text"
                 placeholder="Email or Phone Number"
                 required
               />
@@ -108,7 +97,6 @@ const Signup = () => {
             </p>
           </>
         ) : (
-          // Signup Form
           <>
             <h1>Create an account</h1>
             <p>Enter your details below</p>
@@ -121,9 +109,9 @@ const Signup = () => {
                 required
               />
               <input
-                onChange={(e) => setEmail(e.target.value)}
-                value={email}
-                type="email"
+                onChange={(e) => setEmailOrPhone(e.target.value)}
+                value={emailOrPhone}
+                type="text"
                 placeholder="Email or Phone Number"
                 required
               />
