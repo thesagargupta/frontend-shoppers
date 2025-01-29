@@ -32,7 +32,7 @@ const Home = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch(backendUrl + '/api/product/list'); // API to fetch products
+        const response = await fetch('https://backend-shoopers.onrender.com/api/product/list'); // API to fetch products
         const data = await response.json();
         
         if (Array.isArray(data.products)) {
