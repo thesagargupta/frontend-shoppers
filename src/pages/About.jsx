@@ -14,7 +14,6 @@ import {
 import CountUp from "react-countup";
 import sagar from "../assets/sagar.jpg";
 import "intersection-observer"; // Polyfill for IntersectionObserver
-import React from 'react';
 
 
 const About = () => {

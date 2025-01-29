@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
 import "./PlaceOrder.css";
 import { useForm } from "react-hook-form";
-import React from 'react';
 
 
 const PlaceOrder = () => {

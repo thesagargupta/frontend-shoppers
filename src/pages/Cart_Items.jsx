@@ -2,7 +2,6 @@ import { useContext, useState, useEffect } from "react";
 import { ShopContext } from "../context/ShopContext";
 import { Link, useNavigate } from "react-router-dom";
 import "./Cart_Items.css";
-import React from 'react';
 import { FaTrashAlt } from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFaceSadCry } from "@fortawesome/free-solid-svg-icons";

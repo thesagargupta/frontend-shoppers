@@ -4,7 +4,6 @@ import Breadcrumbs from "./Breadcrumbs";
 import { FaHeart, FaShoppingCart, FaShoppingBag, FaStar } from "react-icons/fa";
 import { TbTruckDelivery } from "react-icons/tb";
 import { GiReturnArrow } from "react-icons/gi";
-import React from 'react';
 import "./ProductPage.css";
 import Suggestion from "./Suggestion";
 import { ShopContext } from "../context/ShopContext";
@@ -14,8 +13,7 @@ const ProductPage = () => {
   const [product, setProduct] = useState(null); // Product data
   const [isWishlisted, setIsWishlisted] = useState(false); // Wishlist state
   const { CartItem, AddToCart, RemoveFromCart } = useContext(ShopContext);
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;  // Backend URL from .env file
-
+  const backendUrl = 'https://backend-shoopers.onrender.com'
   const quantity = CartItem[id] || 0; // Quantity in the cart for this product
 
   useEffect(() => {

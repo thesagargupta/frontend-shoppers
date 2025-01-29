@@ -1,7 +1,6 @@
 import { useState, useEffect, useContext } from 'react'; 
 import ProductCard from '../components/NavbarFolder/ProductCard';
 import { ShopContext } from '../context/ShopContext'; // Import the ShopContext
-import React from 'react';
 
 
 const Suggestion = () => {

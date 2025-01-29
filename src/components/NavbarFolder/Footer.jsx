@@ -3,7 +3,6 @@ import { NavLink } from "react-router-dom";
 import './Footer.css';
 import google from '../assets/google.png';
 import app from '../assets/app.png';
-import React from 'react';
 
 
 const Footer = () => {

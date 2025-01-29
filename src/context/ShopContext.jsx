@@ -22,8 +22,7 @@ const ShopContextProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
   const [token, setToken] = useState(""); // Token for authentication
   const navigate = useNavigate();
-  const backendUrl = import.meta.env.VITE_BACKEND_URL; // Backend URL from .env file
-
+const backendUrl = 'https://backend-shoopers.onrender.com'
   // Fetch products from the backend
   useEffect(() => {
     const fetchProducts = async () => {
