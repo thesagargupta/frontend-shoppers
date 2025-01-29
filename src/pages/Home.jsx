@@ -17,7 +17,7 @@ const Home = () => {
   const [products, setProducts] = useState([]); // State to hold products from backend
   const [bestSellingProducts, setBestSellingProducts] = useState([]); // State to hold best selling products
   const [loading, setLoading] = useState(true); // Loading state to handle async fetching
-  const backendUrl = 'https://backend-shoopers.onrender.com';  // Backend URL from .env file
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;  // Backend URL from .env file
 
   // Function to shuffle and get random products
   const getRandomProducts = (productList, numberOfItems) => {
