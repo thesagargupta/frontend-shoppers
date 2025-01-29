@@ -13,7 +13,7 @@ const Signup = () => {
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
-  const [emailOrPhone, setEmailOrPhone] = useState("");
+  const [email, setEmail] = useState("");
 
   const handleToggleForm = () => {
     setIsLogin(!isLogin);
@@ -25,19 +25,19 @@ const Signup = () => {
       if (!isLogin) {
         const response = await axios.post(`${backendUrl}/api/user/register`, {
           name,
-          emailOrPhone,
+          email,
           password,
         });
 
         if (response.data.success) {
           toast.success("Account created successfully!");
-          setTimeout(() => setIsLogin(true), 1000);
+          setTimeout(() => setIsLogin(true), 1000); 
         } else {
           toast.error(response.data.message);
         }
       } else {
         const response = await axios.post(`${backendUrl}/api/user/login`, {
-          emailOrPhone,
+          email,
           password,
         });
 
@@ -68,9 +68,9 @@ const Signup = () => {
             <p>Enter your details below</p>
             <form onSubmit={onSubmitHandler}>
               <input
-                onChange={(e) => setEmailOrPhone(e.target.value)}
-                value={emailOrPhone}
-                type="text"
+                onChange={(e) => setEmail(e.target.value)}
+                value={email}
+                type="email"
                 placeholder="Email or Phone Number"
                 required
               />
@@ -109,9 +109,9 @@ const Signup = () => {
                 required
               />
               <input
-                onChange={(e) => setEmailOrPhone(e.target.value)}
-                value={emailOrPhone}
-                type="text"
+                onChange={(e) => setEmail(e.target.value)}
+                value={email}
+                type="email"
                 placeholder="Email or Phone Number"
                 required
               />
