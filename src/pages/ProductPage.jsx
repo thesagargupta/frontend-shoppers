@@ -13,7 +13,7 @@ const ProductPage = () => {
   const [product, setProduct] = useState(null); // Product data
   const [isWishlisted, setIsWishlisted] = useState(false); // Wishlist state
   const { CartItem, AddToCart, RemoveFromCart } = useContext(ShopContext);
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;  // Backend URL from .env file
+  const backendUrl = 'https://backend-shoopers.onrender.com';  // Backend URL from .env file
 
   const quantity = CartItem[id] || 0; // Quantity in the cart for this product
 
