@@ -4,7 +4,6 @@ import { ShopContext } from "../context/ShopContext";
 import "./PlaceOrder.css";
 import { useForm } from "react-hook-form";
 
-
 const PlaceOrder = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -13,9 +12,11 @@ const PlaceOrder = () => {
   const { products } = useContext(ShopContext); // Fetch products from the backend
   const { register } = useForm();
 
-  // State to store city based on pincode
+  // State to store city and state based on pincode
   const [city, setCity] = useState("");
+  const [stateName, setStateName] = useState("");
   const [manualCity, setManualCity] = useState(false); // State to toggle manual city input
+  const [manualState, setManualState] = useState(false); // State to toggle manual state input
   const [isLoading, setIsLoading] = useState(true); // State to track loading state
 
   // Effect to check loading and navigate if data is unavailable
@@ -42,25 +43,29 @@ const PlaceOrder = () => {
     navigate("/"); // Navigate to the home page after placing the order
   };
 
-  // Function to handle pincode input and set city
+  // Function to handle pincode input and set city and state
   const handlePincodeChange = async (e) => {
     const pincode = e.target.value;
 
-    // Call an API (e.g., Zippopotam) to fetch city based on pincode
-    if (pincode.length === 6 && !manualCity) {
-      // Only auto-fill when manual is not selected
+    // Call an API (e.g., Zippopotam) to fetch city and state based on pincode
+    if (pincode.length === 6 && !manualCity && !manualState) {
+      // Only auto-fill when manual input is not selected
       try {
         const response = await fetch(`https://api.zippopotam.us/in/${pincode}`);
         if (response.ok) {
           const data = await response.json();
           const cityName = data.places[0]["place name"];
+          const stateName = data.places[0]["state"];
           setCity(cityName);
+          setStateName(stateName);
         } else {
           setCity(""); // Reset if no city found
+          setStateName(""); // Reset if no state found
         }
       } catch (error) {
-        console.error("Error fetching city:", error);
+        console.error("Error fetching city and state:", error);
         setCity(""); // Reset on error
+        setStateName(""); // Reset on error
       }
     }
   };
@@ -70,6 +75,14 @@ const PlaceOrder = () => {
     setManualCity(!manualCity);
     if (!manualCity) {
       setCity(""); // Clear city when toggling to manual input
+    }
+  };
+
+  // Handle the manual state input toggle
+  const handleManualStateToggle = () => {
+    setManualState(!manualState);
+    if (!manualState) {
+      setStateName(""); // Clear state when toggling to manual input
     }
   };
 
@@ -155,7 +168,7 @@ const PlaceOrder = () => {
               placeholder="Enter your apartment/flat/landmark name (if applicable)"
             />
 
-            <label htmlFor="landmark">City:</label>
+            <label htmlFor="landmark">Locality:</label>
             <input
               type="text"
               id="landmark"
@@ -183,14 +196,38 @@ const PlaceOrder = () => {
               </label>
             </div>
 
+            <label htmlFor="state">State:</label>
+            <input
+              type="text"
+              id="state"
+              name="state"
+              value={stateName} // Always bind the state input value to the state
+              placeholder={
+                manualState
+                  ? "Enter your state"
+                  : "State will be auto-filled based on pincode"
+              }
+              onChange={manualState ? (e) => setStateName(e.target.value) : null} // Allow manual state input if selected
+              required
+            />
+
+            <div className="form-check">
+              <input
+                type="checkbox"
+                className="form-check-input"
+                id="manualState"
+                checked={manualState}
+                onChange={handleManualStateToggle}
+              />
+              <label className="form-check-label" htmlFor="manualState">
+                Enter State Manually
+              </label>
+            </div>
+
             <label htmlFor="payment">Prefered Gateway:</label>
             <select id="payment" name="payment" required>
-              <option value="stripe">
-                Stripe
-              </option>
-              <option value="razorpay">
-                Razorpay
-              </option>
+              <option value="stripe">Stripe</option>
+              <option value="razorpay">Razorpay</option>
             </select>
 
             <div className="form-check">
