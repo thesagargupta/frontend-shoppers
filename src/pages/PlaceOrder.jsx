@@ -133,6 +133,12 @@ const PlaceOrder = () => {
       toast.dismiss(loadingToast);
       return;
     }
+
+    if (!validateAddress(apartment)) {
+      toast.error("Address must be at least 10 characters long!");
+      toast.dismiss(loadingToast);
+      return;
+    }
     
   
     const orderItems = [];
@@ -230,6 +236,10 @@ const validatePincode = (pincode) => {
 // Name validation: Ensures minimum 5 characters
 const validateName = (name) => {
   return name.trim().length >= 5;
+};
+
+const validateAddress = (apartment) => {
+  return apartment.trim().length >= 8;
 };
 
   
