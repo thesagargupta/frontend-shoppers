@@ -150,7 +150,11 @@ h2, h3, h4, h5 {
   color: #555;
   word-wrap: break-word;
 }
-
+.fa-check-circle:before {
+    content: "\f058";
+    color: green;
+    padding-right: 5px;
+}
 /* Responsive Styles */
 @media (max-width: 1024px) {
   .order-container {
