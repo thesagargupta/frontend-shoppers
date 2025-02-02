@@ -5,16 +5,21 @@ import { FaShoppingCart, FaHeart, FaSearch, FaUser, FaBars, FaTimes } from "reac
 import "./Navbar.css";
 import { ShopContext } from "../../context/ShopContext";
 
-
 const Navbar = () => {
   const [menuActive, setMenuActive] = useState(false);
   const [searchActive, setSearchActive] = useState(false);
-  
-  // Correctly destructure SetSearch as setSearchQuery
+  const [cartCount, setCartCount] = useState(0);
+
+  // Context values
   const { SetSearch: setSearchQuery, performSearch, CartItem } = useContext(ShopContext);
 
-  // Calculate the total cart count
-  const cartCount = Object.values(CartItem).reduce((total, quantity) => total + quantity, 0);
+  // Calculate cart count only when CartItem changes
+  useEffect(() => {
+    const count = Object.values(CartItem || {}).reduce((total, quantity) => {
+      return total + (Number(quantity) || 0);
+    }, 0);
+    setCartCount(count);
+  }, [CartItem]); // Runs when CartItem changes
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -22,11 +27,7 @@ const Navbar = () => {
 
   const handleToggleMenu = () => {
     setMenuActive((prev) => !prev);
-    if (!menuActive) {
-      document.body.classList.add("menu-open");
-    } else {
-      document.body.classList.remove("menu-open");
-    }
+    document.body.classList.toggle("menu-open", !menuActive);
   };
 
   const handleLinkClick = () => {
@@ -40,14 +41,13 @@ const Navbar = () => {
   };
 
   const handleSearchInput = (e) => {
-    setSearchQuery(e.target.value); // Correctly update search query in context
+    setSearchQuery(e.target.value);
   };
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    performSearch(); // Ensure performSearch is called safely
+    performSearch();
   };
-  
 
   return (
     <div>
@@ -89,6 +89,11 @@ const Navbar = () => {
                 About
               </NavLink>
             </li>
+            <li>
+              <NavLink to="/orders" className={({ isActive }) => (isActive ? "active-link" : "")} onClick={handleLinkClick}>
+                Orders
+              </NavLink>
+            </li>
           </ul>
         </div>
 
@@ -120,7 +125,7 @@ const Navbar = () => {
           <div className="cart">
             <NavLink to="/cart">
               <FaShoppingCart />
-              <div className="cart-count">{cartCount}</div>
+              <div className="cart-count">{cartCount}</div> {/* Always shows a number */}
             </NavLink>
           </div>
 

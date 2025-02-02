@@ -1,0 +1,291 @@
+/* General Styles */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #f4f4f9;
+  color: #333;
+  line-height: 1.6;
+}
+
+h2, h3, h4, h5 {
+  margin: 0;
+  font-weight: 600;
+}
+
+.order-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.page-title {
+  text-align: center;
+  font-size: 30px;
+  color: #444;
+  margin-bottom: 40px;
+  font-weight: 700;
+}
+
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.order-item {
+  background-color: #ffffff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.order-item:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.order-id {
+  font-size: 20px;
+  color: #333;
+  font-weight: bold;
+}
+
+.order-status {
+  font-weight: bold;
+  padding: 6px 12px;
+  border-radius: 5px;
+  text-transform: capitalize;
+}
+
+.order-status.completed {
+  background-color: #4caf50;
+  color: white;
+}
+
+.order-status.pending {
+  background-color: #ff9800;
+  color: white;
+}
+
+.order-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.order-item-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: calc(33.333% - 20px); /* 3 items per row */
+  max-width: 350px;
+  align-items: center;
+}
+
+.order-item-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 10px;
+  max-width: 200px;
+}
+
+.order-item-info {
+  text-align: center;
+}
+
+.order-item-info h5 {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.order-item-info p {
+  font-size: 14px;
+  color: #666;
+}
+
+.order-summary {
+  padding: 10px 0;
+  border-top: 1px solid #f2f2f2;
+  font-size: 16px;
+}
+
+.order-summary p {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.order-shipping-details {
+  margin-top: 20px;
+  border-top: 1px solid #f2f2f2;
+  padding-top: 20px;
+}
+
+.order-shipping-details p {
+  font-size: 14px;
+  color: #555;
+  word-wrap: break-word;
+}
+
+/* Responsive Styles */
+@media (max-width: 1024px) {
+  .order-container {
+    padding: 15px;
+  }
+
+  .order-item {
+    padding: 20px;
+    gap: 15px;
+  }
+
+  .order-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .order-items {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .order-item-detail {
+    width: 100%; /* Full width on tablets */
+    max-width: none;
+  }
+
+  .order-item-image {
+    width: 150px;
+    height: 150px;
+  }
+
+  .order-item-info h5 {
+    font-size: 16px;
+  }
+
+  .order-item-info p {
+    font-size: 12px;
+  }
+
+  .order-summary {
+    font-size: 14px;
+  }
+
+  .order-shipping-details {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .order-container {
+    padding: 15px;
+  }
+
+  .page-title {
+    font-size: 26px;
+  }
+
+  .order-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .order-items {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .order-item-detail {
+    width: 100%;
+  }
+
+  .order-item-image {
+    width: 120px;
+    height: 120px;
+  }
+
+  .order-item-info h5 {
+    font-size: 14px;
+  }
+
+  .order-item-info p {
+    font-size: 12px;
+  }
+
+  .order-summary,
+  .order-shipping-details {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .order-container {
+    padding: 10px;
+  }
+  h3{
+    font-size: 1.1rem;
+  }
+  .page-title {
+    font-size: 22px;
+  }
+
+  .order-item {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .order-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .order-items {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .order-item-detail {
+    width: 100%;
+  }
+
+  .order-item-image {
+    width: 100px;
+    height: 100px;
+  }
+
+  .order-item-info h5 {
+    font-size: 12px;
+  }
+
+  .order-item-info p {
+    font-size: 10px;
+  }
+
+  .order-summary,
+  .order-shipping-details {
+    font-size: 12px;
+  }
+}

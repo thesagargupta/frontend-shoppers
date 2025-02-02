@@ -22,7 +22,7 @@ const ShopContextProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
   const [token, setToken] = useState(""); // Token for authentication
   const navigate = useNavigate();
-  const backendUrl = 'https://backend-shoopers.onrender.com'; // Backend URL from .env file
+  const backendUrl = import.meta.env.VITE_BACKEND_URL // Backend URL from .env file
 
   // Fetch products from the backend
   useEffect(() => {
@@ -230,6 +230,7 @@ const ShopContextProvider = ({ children }) => {
     token,
     backendUrl,
     saveTokenToLocalStorage,
+    SetCartItem,
   };
 
   return (

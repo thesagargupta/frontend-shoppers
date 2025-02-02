@@ -138,7 +138,9 @@
   .user-welcome {
     font-size: 1.5rem; /* Reduce the font size of the welcome text */
   }
-
+  .user-icon{
+    top: 50px;
+  }
   .user-info h3,
   .user-info p {
     font-size: 1rem; /* Adjust font sizes for smaller screens */

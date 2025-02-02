@@ -19,6 +19,7 @@ import React from 'react';
 import ScrollToTop from "./pages/ScrollToTop";
 import SearchResults from "./pages/SearchResult";
 import ShopContextProvider from "./context/ShopContext"; // Import ShopContextProvider
+import Order from "./pages/Order";
 
 const App = () => {
   return (
@@ -40,6 +41,7 @@ const App = () => {
         <Route path="/category/:categoryName" element={<CategoryPage />} />
         <Route path="/place-order" element={<PlaceOrder />} />
         <Route path="/search-results" element={<SearchResults />} />
+        <Route path="/orders" element={<Order/>} />
       </Routes>
       <Footer />
     </ShopContextProvider>

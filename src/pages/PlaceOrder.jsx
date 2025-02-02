@@ -3,13 +3,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
 import "./PlaceOrder.css";
 import { useForm } from "react-hook-form";
-
+import toast, { Toaster } from "react-hot-toast";
 const PlaceOrder = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { state } = location || {};
   const { cartItems = {}, finalAmount = 0 } = state || {};
-  const { products } = useContext(ShopContext); // Fetch products from the backend
+  const { products, backendUrl, token, SetCartItem } = useContext(ShopContext); // Fetch products from the backend
   const { register } = useForm();
 
   // State to store city and state based on pincode
@@ -36,12 +36,6 @@ const PlaceOrder = () => {
   const productsInCart = products.filter(
     (product) => cartItems[product._id] > 0 // Use _id from backend data
   );
-
-  const handlePlaceOrder = (e) => {
-    e.preventDefault();
-    alert("Order placed successfully!");
-    navigate("/"); // Navigate to the home page after placing the order
-  };
 
   // Function to handle pincode input and set city and state
   const handlePincodeChange = async (e) => {
@@ -94,8 +88,97 @@ const PlaceOrder = () => {
     return images.length > 0 ? images[0] : "/default-image.png"; // Fallback to a default image if not available
   };
 
+  const onSubmitHandler = async (event) => {
+    event.preventDefault();
+  
+    const loadingToast = toast.loading("Placing your order...");
+  
+    const orderItems = [];
+    for (const item in cartItems) {
+      if (cartItems[item] > 0) {
+        const itemInfo = structuredClone(
+          products.find((product) => product._id === item)
+        );
+        if (itemInfo) {
+          itemInfo.quantity = cartItems[item];
+          orderItems.push(itemInfo);
+        }
+      }
+    }
+  
+    const paymentMethod = event.target.payment.value;
+  
+    // Determine the API endpoint based on the selected payment method
+    let orderUrl = `${backendUrl}/api/order/place`; // Default endpoint for COD
+    if (paymentMethod === "stripe") {
+      orderUrl = `${backendUrl}/api/order/stripe`;
+    } else if (paymentMethod === "razorpay") {
+      orderUrl = `${backendUrl}/api/order/razorpay`;
+    }
+  
+    const orderData = {
+      items: orderItems,
+      amount: finalAmount,
+      address: {
+        fullName: event.target.name.value,
+        phoneNumber: event.target.phone.value,
+        pincode: event.target.pincode.value,
+        city: manualCity ? city : stateName,
+        state: manualState ? stateName : city,
+        apartment: event.target.apartment.value,
+        locality: event.target.landmark.value,
+      },
+      paymentMethod,
+    };
+  
+    try {
+      const response = await fetch(orderUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(orderData),
+      });
+  
+      if (response.ok) {
+        toast.success("Order placed successfully!");
+  
+        // Clear the cart from both state and local storage
+        SetCartItem({});
+        localStorage.removeItem("cartItems");
+  
+        // Call the backend API to clear the cart in the database
+        await fetch(`${backendUrl}/api/cart/clear`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+  
+        // Navigate to the order confirmation page after clearing the cart
+        setTimeout(() => {
+          navigate("/orders");
+        }, 2000); // Navigate after 2 seconds
+      } else {
+        const errorData = await response.json();
+        toast.error(
+          errorData.message || "Failed to place order. Please try again."
+        );
+      }
+    } catch (error) {
+      toast.error("Error placing order. Please try again.");
+      console.error("Error placing order:", error);
+    } finally {
+      toast.dismiss(loadingToast); // Dismiss the loading toast when request completes
+    }
+  };
+  
   return (
     <div className="place-order-container">
+      <Toaster position="top-center" reverseOrder={false} />
+
       <h2 className="page-title">Place Your Order</h2>
 
       <div className="content-wrapper">
@@ -128,7 +211,7 @@ const PlaceOrder = () => {
         {/* Order Form Section */}
         <div className="order-form">
           <h3>Shipping Details</h3>
-          <form onSubmit={handlePlaceOrder}>
+          <form onSubmit={onSubmitHandler}>
             <label htmlFor="name">Full Name:</label>
             <input
               type="text"
@@ -207,7 +290,9 @@ const PlaceOrder = () => {
                   ? "Enter your state"
                   : "State will be auto-filled based on pincode"
               }
-              onChange={manualState ? (e) => setStateName(e.target.value) : null} // Allow manual state input if selected
+              onChange={
+                manualState ? (e) => setStateName(e.target.value) : null
+              } // Allow manual state input if selected
               required
             />
 
@@ -228,6 +313,7 @@ const PlaceOrder = () => {
             <select id="payment" name="payment" required>
               <option value="stripe">Stripe</option>
               <option value="razorpay">Razorpay</option>
+              <option value="cod">COD</option>
             </select>
 
             <div className="form-check">

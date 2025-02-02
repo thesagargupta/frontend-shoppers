@@ -45,10 +45,9 @@ const User = () => {
   };
 
   const fetchUserOrders = async () => {
-    const toastId = toast.loading("Loading orders...");
     try {
-      const response = await fetch(`${backendUrl}/api/user/orders`, {
-        method: "GET",
+      const response = await fetch(`${backendUrl}/api/order/userorders`, {
+        method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -57,12 +56,10 @@ const User = () => {
       if (response.ok) {
         const data = await response.json();
         setOrders(data.orders);
-        toast.success("Orders loaded successfully.", { id: toastId });
       } else {
         throw new Error("Failed to fetch orders.");
       }
     } catch (error) {
-      toast.error("Unable to fetch orders. Please try again.", { id: toastId });
       console.log(error);
     }
   };
@@ -176,7 +173,7 @@ const User = () => {
                     <li key={order._id} className="order-item">
                       <p>Order ID: {order._id}</p>
                       <p>Status: {order.status}</p>
-                      <p>Total: ${order.total}</p>
+                      <p>Total: ₹{order.amount}</p>
                     </li>
                   ))}
                 </ul>
