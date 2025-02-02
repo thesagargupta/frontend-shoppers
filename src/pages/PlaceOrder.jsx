@@ -135,7 +135,7 @@ const PlaceOrder = () => {
     }
 
     if (!validateAddress(apartment)) {
-      toast.error("Address must be at least 10 characters long!");
+      toast.error("Address must be at least 15 characters long!");
       toast.dismiss(loadingToast);
       return;
     }
@@ -239,7 +239,7 @@ const validateName = (name) => {
 };
 
 const validateAddress = (apartment) => {
-  return apartment.trim().length >= 8;
+  return apartment.trim().length >= 15;
 };
 
   

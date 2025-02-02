@@ -1,12 +1,21 @@
 import { useEffect, useState, useContext } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { ShopContext } from "../context/ShopContext";
+import { useNavigate } from "react-router-dom";
 import "./Order.css"; // Make sure necessary styles are in this file
 
 const Order = () => {
   const { backendUrl, token } = useContext(ShopContext);
+  const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (!token) {
+      toast.error("Please login first");
+      navigate("/login"); // Redirect to login after showing the toast
+    }
+  }, [token, navigate]);
 
   // Fetch orders when the component mounts
   useEffect(() => {
@@ -24,10 +33,9 @@ const Order = () => {
           const data = await response.json();
           setOrders(data.orders);
         } else {
-          toast.error("Failed to fetch orders");
+          console.log("failed to fetch order")
         }
       } catch (error) {
-        toast.error("Error fetching orders");
         console.log(error);
       } finally {
         setIsLoading(false);
