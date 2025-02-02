@@ -91,7 +91,49 @@ const PlaceOrder = () => {
   const onSubmitHandler = async (event) => {
     event.preventDefault();
   
+    // Start loading toast
     const loadingToast = toast.loading("Placing your order...");
+  
+    // Validate form fields before processing the order
+    const name = event.target.name.value.trim();
+    const phone = event.target.phone.value.trim();
+    const pincode = event.target.pincode.value.trim();
+    const apartment = event.target.apartment.value.trim();
+    const locality = event.target.landmark.value.trim();
+  
+    // Validation checks
+    if (!name) {
+      toast.error("Full Name is required!");
+      toast.dismiss(loadingToast);
+      return;
+    }
+    if (!validatePhone(phone)) {
+      toast.error("Please enter a valid phone number!");
+      toast.dismiss(loadingToast);
+      return;
+    }
+    if (!validatePincode(pincode)) {
+      toast.error("Please enter a valid 6-digit pincode!");
+      toast.dismiss(loadingToast);
+      return;
+    }
+    if (!apartment) {
+      toast.error("Apartment/Flat/Landmark is required!");
+      toast.dismiss(loadingToast);
+      return;
+    }
+    if (!locality) {
+      toast.error("Locality is required!");
+      toast.dismiss(loadingToast);
+      return;
+    }
+
+    if (!validateName(name)) {
+      toast.error("Full Name must be at least 5 characters!");
+      toast.dismiss(loadingToast);
+      return;
+    }
+    
   
     const orderItems = [];
     for (const item in cartItems) {
@@ -120,13 +162,13 @@ const PlaceOrder = () => {
       items: orderItems,
       amount: finalAmount,
       address: {
-        fullName: event.target.name.value,
-        phoneNumber: event.target.phone.value,
-        pincode: event.target.pincode.value,
+        fullName: name,
+        phoneNumber: phone,
+        pincode: pincode,
         city: manualCity ? city : stateName,
         state: manualState ? stateName : city,
-        apartment: event.target.apartment.value,
-        locality: event.target.landmark.value,
+        apartment,
+        locality,
       },
       paymentMethod,
     };
@@ -174,6 +216,22 @@ const PlaceOrder = () => {
       toast.dismiss(loadingToast); // Dismiss the loading toast when request completes
     }
   };
+// Utility functions for validation
+const validatePhone = (phone) => {
+  const phonePattern = /^[6-9]\d{9}$/;
+  return phonePattern.test(phone);
+};
+
+const validatePincode = (pincode) => {
+  const pincodePattern = /^\d{6}$/;
+  return pincodePattern.test(pincode);
+};
+
+// Name validation: Ensures minimum 5 characters
+const validateName = (name) => {
+  return name.trim().length >= 5;
+};
+
   
   return (
     <div className="place-order-container">
