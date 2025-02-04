@@ -155,6 +155,12 @@ h2, h3, h4, h5 {
     color: green;
     padding-right: 5px;
 }
+.canceled {
+  color: red;
+  padding-right: 5px;
+  /* Red color for the canceled status */
+}
+
 /* Responsive Styles */
 @media (max-width: 1024px) {
   .order-container {

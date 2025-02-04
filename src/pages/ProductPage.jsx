@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { useParams, NavLink } from "react-router-dom";
+import { useParams, NavLink, useNavigate } from "react-router-dom";
 import Breadcrumbs from "./Breadcrumbs";
 import { FaHeart, FaShoppingCart, FaShoppingBag, FaStar } from "react-icons/fa";
 import { TbTruckDelivery } from "react-icons/tb";
@@ -14,6 +14,7 @@ const ProductPage = () => {
   const [isWishlisted, setIsWishlisted] = useState(false); // Wishlist state
   const { CartItem, AddToCart, RemoveFromCart } = useContext(ShopContext);
   const backendUrl = import.meta.env.VITE_BACKEND_URL;  // Backend URL from .env file
+  const navigate = useNavigate();  // Use navigate hook to redirect to another route
 
   const quantity = CartItem[id] || 0; // Quantity in the cart for this product
 
@@ -54,6 +55,13 @@ const ProductPage = () => {
 
   const handleWishlistClick = () => {
     setIsWishlisted((prevState) => !prevState);
+  };
+
+  const handleBuyNow = () => {
+    // Add product to cart
+    AddToCart(id);
+    // Navigate to the place-order page
+    navigate("/place-order");
   };
 
   if (!product) {
@@ -146,7 +154,7 @@ const ProductPage = () => {
                 </button>
               </div>
             )}
-            <button className="buy-now-btn">
+            <button className="buy-now-btn" onClick={handleBuyNow}>
               <FaShoppingBag className="buy" /> Buy Now
             </button>
           </div>

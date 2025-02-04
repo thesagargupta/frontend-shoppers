@@ -33,7 +33,7 @@ const Order = () => {
           const data = await response.json();
           setOrders(data.orders);
         } else {
-          console.log("failed to fetch order")
+          console.log("failed to fetch order");
         }
       } catch (error) {
         console.log(error);
@@ -68,14 +68,19 @@ const Order = () => {
             <div className="order-header">
               <h3>Order #{order._id}</h3>
               <p>
+                {/* Conditional rendering for check circle or red cross */}
                 <i
-                  className={`fas fa-check-circle ${order.status.toLowerCase()}`}
+                  className={`fas ${
+                    order.status === "Cancelled"
+                      ? "fa-times-circle canceled"
+                      : "fa-check-circle"
+                  } ${order.status.toLowerCase()}`}
                 />
                 Status:{" "}
                 <span className={`order-status ${order.status.toLowerCase()}`}>
                   {order.status}
                 </span>
-              </p>{" "}
+              </p>
               <p>Date: {new Date(order.date).toLocaleString()}</p>
             </div>
 
@@ -113,6 +118,7 @@ const Order = () => {
                 {order.address.pincode}
               </p>
               <p>Phone: {order.address.phoneNumber}</p>
+              <p>Payment Method:-  {order.paymentMethod}</p>
             </div>
           </div>
         ))}
