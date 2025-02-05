@@ -1,15 +1,54 @@
-import "./Contact.css";
+import { useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 import { LuPhoneCall } from "react-icons/lu";
 import { TfiEmail } from "react-icons/tfi";
+import "./Contact.css";
+import { backendUrl } from "../../../admin/src/components/Config";
 
 const Contact = () => {
-  const handleSubmit = (event) => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    message: "",
+  });
+
+  const [isLoading, setIsLoading] = useState(false); // Loading state
+
+  const handleChange = (event) => {
+    setFormData({ ...formData, [event.target.name]: event.target.value });
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    alert("Message sent successfully!");
+    setIsLoading(true); // Start loading
+    const toastId = toast.loading("Sending message..."); // Show loader toast
+
+    try {
+      const response = await fetch(backendUrl + "/api/contact/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        toast.success(data.message, { id: toastId });
+        setFormData({ name: "", email: "", phone: "", message: "" }); // Reset form
+      } else {
+        toast.error(data.message, { id: toastId });
+      }
+    } catch (error) {
+      toast.error("Failed to send message. Try again.", { id: toastId });
+      console.error("Error:", error);
+    } finally {
+      setIsLoading(false); // Stop loading
+    }
   };
 
   return (
     <div className="contact-container">
+      <Toaster position="top-center" reverseOrder={false} />
       <div className="contact-info">
         <div className="info-item">
           <i className="icon"><LuPhoneCall /></i>
@@ -29,12 +68,14 @@ const Contact = () => {
       <div className="contact-form">
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <input type="text" placeholder="Your Name *" required />
-            <input type="email" placeholder="Your Email *" required />
-            <input type="text" placeholder="Your Phone *" required />
+            <input type="text" name="name" placeholder="Your Name *" value={formData.name} onChange={handleChange} required />
+            <input type="email" name="email" placeholder="Your Email *" value={formData.email} onChange={handleChange} required />
+            <input type="text" name="phone" placeholder="Your Phone *" value={formData.phone} onChange={handleChange} required />
           </div>
-          <textarea placeholder="Your Message" rows="5" required></textarea>
-          <button type="submit" className="btn-submit">Send Message</button>
+          <textarea name="message" placeholder="Your Message" rows="5" value={formData.message} onChange={handleChange} required></textarea>
+          <button type="submit" className="btn-submit" disabled={isLoading}>
+            {isLoading ? "Sending..." : "Send Message"}
+          </button>
         </form>
       </div>
     </div>

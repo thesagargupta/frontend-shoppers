@@ -2,24 +2,30 @@ import { useEffect, useState, useContext } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { ShopContext } from "../context/ShopContext";
 import { useNavigate } from "react-router-dom";
-import "./Order.css"; // Make sure necessary styles are in this file
+import "./Order.css"; // Ensure necessary styles are included
 
 const Order = () => {
-  const { backendUrl, token } = useContext(ShopContext);
+  const { backendUrl, token, setToken } = useContext(ShopContext);
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Load token from local storage on mount
   useEffect(() => {
-    if (!token) {
+    const storedToken = localStorage.getItem("token");
+    if (!token && storedToken) {
+      setToken(storedToken); // Update context with stored token
+    } else if (!token) {
       toast.error("Please login first");
-      navigate("/login"); // Redirect to login after showing the toast
+      navigate("/login");
     }
-  }, [token, navigate]);
+  }, [token, navigate, setToken]);
 
-  // Fetch orders when the component mounts
+  // Fetch orders when the component mounts and token is available
   useEffect(() => {
     const fetchOrders = async () => {
+      if (!token) return; // Ensure token is available
+
       try {
         const response = await fetch(`${backendUrl}/api/order/userorders`, {
           method: "POST",
@@ -33,10 +39,11 @@ const Order = () => {
           const data = await response.json();
           setOrders(data.orders);
         } else {
-          console.log("failed to fetch order");
+          toast.error("Failed to fetch orders");
         }
       } catch (error) {
-        console.log(error);
+        console.error("Error fetching orders:", error);
+        toast.error("An error occurred while fetching orders");
       } finally {
         setIsLoading(false);
       }
@@ -68,7 +75,6 @@ const Order = () => {
             <div className="order-header">
               <h3>Order #{order._id}</h3>
               <p>
-                {/* Conditional rendering for check circle or red cross */}
                 <i
                   className={`fas ${
                     order.status === "Cancelled"
@@ -118,7 +124,7 @@ const Order = () => {
                 {order.address.pincode}
               </p>
               <p>Phone: {order.address.phoneNumber}</p>
-              <p>Payment Method:-  {order.paymentMethod}</p>
+              <p>Payment Method: {order.paymentMethod}</p>
             </div>
           </div>
         ))}

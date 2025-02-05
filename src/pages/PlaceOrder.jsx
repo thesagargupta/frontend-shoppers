@@ -90,17 +90,17 @@ const PlaceOrder = () => {
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
-  
+
     // Start loading toast
     const loadingToast = toast.loading("Placing your order...");
-  
+
     // Validate form fields before processing the order
     const name = event.target.name.value.trim();
     const phone = event.target.phone.value.trim();
     const pincode = event.target.pincode.value.trim();
     const apartment = event.target.apartment.value.trim();
     const locality = event.target.landmark.value.trim();
-  
+
     // Validation checks
     if (!name) {
       toast.error("Full Name is required!");
@@ -139,8 +139,7 @@ const PlaceOrder = () => {
       toast.dismiss(loadingToast);
       return;
     }
-    
-  
+
     const orderItems = [];
     for (const item in cartItems) {
       if (cartItems[item] > 0) {
@@ -153,9 +152,9 @@ const PlaceOrder = () => {
         }
       }
     }
-  
+
     const paymentMethod = event.target.payment.value;
-  
+
     // Determine the API endpoint based on the selected payment method
     let orderUrl = `${backendUrl}/api/order/place`; // Default endpoint for COD
     if (paymentMethod === "stripe") {
@@ -163,7 +162,7 @@ const PlaceOrder = () => {
     } else if (paymentMethod === "razorpay") {
       orderUrl = `${backendUrl}/api/order/razorpay`;
     }
-  
+
     const orderData = {
       items: orderItems,
       amount: finalAmount,
@@ -178,7 +177,7 @@ const PlaceOrder = () => {
       },
       paymentMethod,
     };
-  
+
     try {
       const response = await fetch(orderUrl, {
         method: "POST",
@@ -188,14 +187,14 @@ const PlaceOrder = () => {
         },
         body: JSON.stringify(orderData),
       });
-  
+
       if (response.ok) {
         toast.success("Order placed successfully!");
-  
+
         // Clear the cart from both state and local storage
         SetCartItem({});
         localStorage.removeItem("cartItems");
-  
+
         // Call the backend API to clear the cart in the database
         await fetch(`${backendUrl}/api/cart/clear`, {
           method: "POST",
@@ -204,7 +203,7 @@ const PlaceOrder = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-  
+
         // Navigate to the order confirmation page after clearing the cart
         setTimeout(() => {
           navigate("/orders");
@@ -222,27 +221,26 @@ const PlaceOrder = () => {
       toast.dismiss(loadingToast); // Dismiss the loading toast when request completes
     }
   };
-// Utility functions for validation
-const validatePhone = (phone) => {
-  const phonePattern = /^[6-9]\d{9}$/;
-  return phonePattern.test(phone);
-};
+  // Utility functions for validation
+  const validatePhone = (phone) => {
+    const phonePattern = /^[6-9]\d{9}$/;
+    return phonePattern.test(phone);
+  };
 
-const validatePincode = (pincode) => {
-  const pincodePattern = /^\d{6}$/;
-  return pincodePattern.test(pincode);
-};
+  const validatePincode = (pincode) => {
+    const pincodePattern = /^\d{6}$/;
+    return pincodePattern.test(pincode);
+  };
 
-// Name validation: Ensures minimum 5 characters
-const validateName = (name) => {
-  return name.trim().length >= 5;
-};
+  // Name validation: Ensures minimum 5 characters
+  const validateName = (name) => {
+    return name.trim().length >= 5;
+  };
 
-const validateAddress = (apartment) => {
-  return apartment.trim().length >= 15;
-};
+  const validateAddress = (apartment) => {
+    return apartment.trim().length >= 15;
+  };
 
-  
   return (
     <div className="place-order-container">
       <Toaster position="top-center" reverseOrder={false} />
@@ -379,9 +377,9 @@ const validateAddress = (apartment) => {
 
             <label htmlFor="payment">Prefered Gateway:</label>
             <select id="payment" name="payment" required>
+              <option value="cod">Cash On Delivery</option>
               <option value="stripe">Stripe</option>
               <option value="razorpay">Razorpay</option>
-              <option value="cod">COD</option>
             </select>
 
             <div className="form-check">
