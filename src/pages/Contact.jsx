@@ -72,7 +72,7 @@ const Contact = () => {
           <div className="form-group">
             <input type="text" name="name" placeholder="Your Name *" value={formData.name} onChange={handleChange} required />
             <input type="email" name="email" placeholder="Your Email *" value={formData.email} onChange={handleChange} required />
-            <input type="text" name="phone" placeholder="Your Phone *" value={formData.phone} onChange={handleChange} required />
+            <input type="tel" name="phone" placeholder="Your Phone *" value={formData.phone} onChange={handleChange} required />
           </div>
           <textarea name="message" placeholder="Your Message" rows="5" value={formData.message} onChange={handleChange} required></textarea>
           <button type="submit" className="btn-submit" disabled={isLoading}>
