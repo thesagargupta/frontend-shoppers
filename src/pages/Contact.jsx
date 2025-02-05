@@ -3,7 +3,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { LuPhoneCall } from "react-icons/lu";
 import { TfiEmail } from "react-icons/tfi";
 import "./Contact.css";
-import { backendUrl } from "../../../admin/src/components/Config";
+
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -12,6 +12,8 @@ const Contact = () => {
     phone: "",
     message: "",
   });
+
+  const backendUrl = import.meta.env.VITE_BACKEND_URL 
 
   const [isLoading, setIsLoading] = useState(false); // Loading state
 
