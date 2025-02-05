@@ -2,6 +2,7 @@ import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { LuPhoneCall } from "react-icons/lu";
 import { TfiEmail } from "react-icons/tfi";
+import emailjs from "@emailjs/browser";
 import "./Contact.css";
 
 const Contact = () => {
@@ -13,7 +14,6 @@ const Contact = () => {
   });
 
   const [isLoading, setIsLoading] = useState(false);
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   const handleChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
@@ -51,23 +51,26 @@ const Contact = () => {
     setIsLoading(true);
     const toastId = toast.loading("Sending message...");
 
-    try {
-      const response = await fetch(`${backendUrl}/api/contact/submit`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+    const emailParams = {
+      from_name: formData.name,
+      from_email: formData.email,
+      phone: formData.phone,
+      message: formData.message,
+    };
 
-      const data = await response.json();
-      if (data.success) {
-        toast.success("Message sent successfully!", { id: toastId });
-        setFormData({ name: "", email: "", phone: "", message: "" });
-      } else {
-        toast.error(data.message, { id: toastId });
-      }
+    try {
+      await emailjs.send(
+        "service_sge3b8o", 
+        "template_g6e6iqw", // Replace with your EmailJS Template ID
+        emailParams,
+        "b5yXn9zWuQb3zO3GW" 
+      );
+
+      toast.success("Message sent successfully!", { id: toastId });
+      setFormData({ name: "", email: "", phone: "", message: "" });
     } catch (error) {
-      console.log(error)
       toast.error("Failed to send message. Try again.", { id: toastId });
+      console.log(error)
     } finally {
       setIsLoading(false);
     }
