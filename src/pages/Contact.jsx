@@ -1,11 +1,15 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { LuPhoneCall } from "react-icons/lu";
 import { TfiEmail } from "react-icons/tfi";
 import emailjs from "@emailjs/browser";
+import axios from "axios";
+import { ShopContext } from "../context/ShopContext"; 
 import "./Contact.css";
 
 const Contact = () => {
+  const { backendUrl } = useContext(ShopContext); // Access backendUrl from context
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -59,18 +63,22 @@ const Contact = () => {
     };
 
     try {
+      // Send email via EmailJS
       await emailjs.send(
-        "service_sge3b8o", 
-        "template_g6e6iqw", // Replace with your EmailJS Template ID
+        "service_sge3b8o",
+        "template_g6e6iqw",
         emailParams,
-        "b5yXn9zWuQb3zO3GW" 
+        "b5yXn9zWuQb3zO3GW"
       );
+
+      // Send data to backend API
+      await axios.post(`${backendUrl}/api/contact/submit`, formData);
 
       toast.success("Message sent successfully!", { id: toastId });
       setFormData({ name: "", email: "", phone: "", message: "" });
     } catch (error) {
+      console.error(error);
       toast.error("Failed to send message. Try again.", { id: toastId });
-      console.log(error)
     } finally {
       setIsLoading(false);
     }
@@ -79,7 +87,7 @@ const Contact = () => {
   return (
     <div className="contact-container">
       <Toaster position="top-center" reverseOrder={false} />
-      
+
       <div className="contact-info">
         <div className="info-item">
           <i className="icon"><LuPhoneCall /></i>
