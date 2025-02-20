@@ -88,7 +88,7 @@
     border: none; /* Removes border */
     border-radius: 5px; /* Rounded corners */
     padding: 10px 100px; /* Adds space around the text */
-    font-size: 16px; /* Adjusts font size for readability */
+    font-size: 15px; /* Adjusts font size for readability */
     font-weight: bold; /* Makes the text bold */
     text-align: center; /* Centers the text */
     cursor: pointer; /* Adds pointer cursor for interactivity */
