@@ -31,22 +31,36 @@ const Home = () => {
 
   useEffect(() => {
     const fetchProducts = async () => {
+      setLoading(true);
+      
       try {
-        const response = await fetch(backendUrl + '/api/product/list'); // API to fetch products
-        const data = await response.json();
+        const controller = new AbortController();
+        const signal = controller.signal;
         
-        if (Array.isArray(data.products)) {
-          setProducts(getRandomProducts(data.products, 8)); // Update state with random products
-        } else {
-          console.error('API did not return an array of products:', data);
+        // Fetch data with timeout to avoid long waits
+        const timeout = setTimeout(() => controller.abort(), 5000); // 5s timeout
+    
+        const response = await fetch(`${backendUrl}/api/product/list`, { signal });
+        clearTimeout(timeout); // Clear timeout once response is received
+    
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
         }
-
-        setLoading(false); // Set loading to false once products are fetched
+    
+        const data = await response.json();
+    
+        if (Array.isArray(data.products)) {
+          setProducts(getRandomProducts(data.products, 8)); // Pick 8 random products
+        } else {
+          console.error("API did not return an array of products:", data);
+        }
       } catch (error) {
-        console.error('Error fetching products:', error);
-        setLoading(false); // Set loading to false in case of error as well
+        console.error("Error fetching products:", error);
+      } finally {
+        setLoading(false); // Ensure loading is set to false regardless of success or failure
       }
     };
+    
 
     const fetchBestSellingProducts = async () => {
       try {
