@@ -5,6 +5,7 @@ import "./Cart_Items.css";
 import { FaTrashAlt } from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFaceSadCry } from "@fortawesome/free-solid-svg-icons";
+import toast, { Toaster } from "react-hot-toast"; // Import toast and Toaster
 
 const Cart_Items = () => {
   const {
@@ -44,16 +45,18 @@ const Cart_Items = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // Handle coupon application
+  // Handle coupon application with toast notifications
   const handleCouponApply = () => {
     if (couponCode === "DISCOUNT10") {
       setCouponApplied(true);
       setDiscountPercentage(10);
+      toast.success("Coupon successfully applied! 🎉");
     } else if (couponCode === "SUNNYLEONE90") {
       setCouponApplied(true);
       setDiscountPercentage(90);
+      toast.success("Coupon successfully applied! 🎉");
     } else {
-      alert("Invalid coupon code");
+      toast.error("Invalid coupon code");
     }
   };
 
@@ -61,7 +64,9 @@ const Cart_Items = () => {
   const totalAmount = Object.keys(CartItem).reduce((total, itemId) => {
     const quantity = CartItem[itemId];
     if (quantity > 0) {
-      const product = products.find((item) => String(item._id) === String(itemId)); // Use _id instead of id
+      const product = products.find(
+        (item) => String(item._id) === String(itemId)
+      ); // Use _id instead of id
       if (product) {
         total += product.newprice * quantity;
       }
@@ -77,13 +82,13 @@ const Cart_Items = () => {
   // Function to handle images, ensuring we always get an array
   const getProductImages = (product) => {
     const images = Array.isArray(product.image) ? product.image : [product.image];
-    return images.length > 0 ? images[0] : "/default-image.png";  // Fallback to a default image if not available
+    return images.length > 0 ? images[0] : "/default-image.png"; // Fallback to a default image if not available
   };
 
   const handleCheckout = () => {
     // Check if the cart is empty before navigating
     if (Object.keys(CartItem).length === 0) {
-      alert("Your cart is empty. Please add items before proceeding.");
+      toast.error("Your cart is empty. Please add items before proceeding.");
       return;
     }
 
@@ -101,6 +106,9 @@ const Cart_Items = () => {
   // Once products and cart are loaded, render the content
   return (
     <div className="cart-items-container">
+      {/* Add Toaster for toast notifications */}
+      <Toaster position="top-center" reverseOrder={false} />
+
       {Object.keys(CartItem).filter((itemId) => CartItem[itemId] > 0).length === 0 ? (
         <div className="empty-cart-message">
           <p>
@@ -118,7 +126,7 @@ const Cart_Items = () => {
             );
             if (!product) return null;
 
-            const imageUrl = getProductImages(product);  // Get product image
+            const imageUrl = getProductImages(product); // Get product image
 
             return (
               <div key={itemId} className="cart-item">

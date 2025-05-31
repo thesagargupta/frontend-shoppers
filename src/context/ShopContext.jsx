@@ -116,31 +116,39 @@ const ShopContextProvider = ({ children }) => {
       syncUserCart(); // Rollback on failure
     }
   };
+// Updated RemoveFromCart to decrease quantity instead of removing immediately
+const RemoveFromCart = async (itemId) => {
+  if (!token) return;
 
-  // Remove item from the cart
-  const RemoveFromCart = async (itemId) => {
-    if (!token) return;
+  const currentQuantity = CartItem[itemId] || 0;
+  if (currentQuantity <= 0) return;
 
-    try {
-      const response = await axios.post(
-        `${backendUrl}/api/cart/update`,
-        { itemId, quantity: 0 },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+  try {
+    const newQuantity = currentQuantity - 1;
 
-      if (response.data.success) {
-        SetCartItem((prev) => {
-          const newCart = { ...prev };
+    const response = await axios.post(
+      `${backendUrl}/api/cart/update`,
+      { itemId, quantity: newQuantity },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    if (response.data.success) {
+      SetCartItem((prev) => {
+        const newCart = { ...prev };
+        if (newQuantity === 0) {
           delete newCart[itemId];
-          return newCart;
-        });
-      } else {
-        console.error("Failed to remove item from cart:", response.data.message);
-      }
-    } catch (error) {
-      console.error("Error removing item from cart:", error.response?.data || error.message);
+        } else {
+          newCart[itemId] = newQuantity;
+        }
+        return newCart;
+      });
+    } else {
+      console.error("Failed to update cart:", response.data.message);
     }
-  };
+  } catch (error) {
+    console.error("Error updating cart:", error.response?.data || error.message);
+  }
+};
 
   // Clear the cart
   const clearCart = async () => {
