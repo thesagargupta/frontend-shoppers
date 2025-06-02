@@ -5,7 +5,7 @@ import "./Cart_Items.css";
 import { FaTrashAlt } from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFaceSadCry } from "@fortawesome/free-solid-svg-icons";
-import toast, { Toaster } from "react-hot-toast"; // Import toast and Toaster
+import toast, { Toaster } from "react-hot-toast";
 
 const Cart_Items = () => {
   const {
@@ -14,38 +14,33 @@ const Cart_Items = () => {
     RemoveFromCart,
     AddToCart,
     clearCart,
+    DeleteItemFromCart, // ✅ New delete function from context
   } = useContext(ShopContext);
   const navigate = useNavigate();
 
   const [couponCode, setCouponCode] = useState("");
   const [couponApplied, setCouponApplied] = useState(false);
   const [discountPercentage, setDiscountPercentage] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const [isLoading, setIsLoading] = useState(true); // Loading state to prevent rendering too early
-
-  // Ensure that the products and cart are fully loaded before setting isLoading to false
   useEffect(() => {
-    if (products.length > 0 && Object.keys(CartItem).length > 0) {
-      setIsLoading(false); // Set loading to false once products and cart are ready
+    if (products.length > 0 && Object.keys(CartItem).length >= 0) {
+      setIsLoading(false);
     }
   }, [products, CartItem]);
 
-  // Handle removing an item from the cart
   const handleDeleteItem = (itemId) => {
-    RemoveFromCart(itemId);
+    DeleteItemFromCart(itemId); // ✅ Fully remove item from cart
   };
 
-  // Handle clearing the cart
   const handleClearCart = () => {
     clearCart();
   };
 
-  // Handle smooth scroll to top
   const handleLinkClick = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // Handle coupon application with toast notifications
   const handleCouponApply = () => {
     if (couponCode === "DISCOUNT10") {
       setCouponApplied(true);
@@ -60,13 +55,12 @@ const Cart_Items = () => {
     }
   };
 
-  // Calculate total amount
   const totalAmount = Object.keys(CartItem).reduce((total, itemId) => {
     const quantity = CartItem[itemId];
     if (quantity > 0) {
       const product = products.find(
         (item) => String(item._id) === String(itemId)
-      ); // Use _id instead of id
+      );
       if (product) {
         total += product.newprice * quantity;
       }
@@ -74,39 +68,31 @@ const Cart_Items = () => {
     return total;
   }, 0);
 
-  // Calculate final amount after discount
   const finalAmount = couponApplied
     ? totalAmount * ((100 - discountPercentage) / 100)
     : totalAmount;
 
-  // Function to handle images, ensuring we always get an array
   const getProductImages = (product) => {
     const images = Array.isArray(product.image) ? product.image : [product.image];
-    return images.length > 0 ? images[0] : "/default-image.png"; // Fallback to a default image if not available
+    return images.length > 0 ? images[0] : "/default-image.png";
   };
 
   const handleCheckout = () => {
-    // Check if the cart is empty before navigating
     if (Object.keys(CartItem).length === 0) {
       toast.error("Your cart is empty. Please add items before proceeding.");
       return;
     }
-
-    // Proceed to checkout only if cart is not empty
     navigate("/place-order", {
       state: { cartItems: CartItem, finalAmount },
     });
   };
 
-  // Return loading state if products are not yet loaded
   if (isLoading) {
     return <div>Loading cart...</div>;
   }
 
-  // Once products and cart are loaded, render the content
   return (
     <div className="cart-items-container">
-      {/* Add Toaster for toast notifications */}
       <Toaster position="top-center" reverseOrder={false} />
 
       {Object.keys(CartItem).filter((itemId) => CartItem[itemId] > 0).length === 0 ? (
@@ -122,16 +108,16 @@ const Cart_Items = () => {
             if (quantity === 0) return null;
 
             const product = products.find(
-              (item) => String(item._id) === String(itemId) // Ensure consistent comparison with _id
+              (item) => String(item._id) === String(itemId)
             );
             if (!product) return null;
 
-            const imageUrl = getProductImages(product); // Get product image
+            const imageUrl = getProductImages(product);
 
             return (
               <div key={itemId} className="cart-item">
                 <Link
-                  to={`/product/${product._id}`} // Use _id for the product link
+                  to={`/product/${product._id}`}
                   style={{ textDecoration: "none" }}
                   onClick={handleLinkClick}
                 >
@@ -165,7 +151,7 @@ const Cart_Items = () => {
                   </p>
                   <button
                     className="delete-item-btn"
-                    onClick={() => handleDeleteItem(itemId)}
+                    onClick={() => handleDeleteItem(itemId)} // ✅ Calls DeleteItemFromCart
                   >
                     <FaTrashAlt size={18} />
                   </button>
@@ -204,7 +190,7 @@ const Cart_Items = () => {
             </div>
             <button
               className="checkout-btn"
-              onClick={handleCheckout} // Handle checkout logic
+              onClick={handleCheckout}
             >
               Proceed to Checkout
             </button>

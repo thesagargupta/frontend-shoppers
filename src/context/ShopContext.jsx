@@ -150,6 +150,31 @@ const RemoveFromCart = async (itemId) => {
   }
 };
 
+const DeleteItemFromCart = async (itemId) => {
+  if (!token) return;
+
+  try {
+    const response = await axios.post(
+      `${backendUrl}/api/cart/remove`, // Assuming your backend has a /remove endpoint
+      { itemId },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    if (response.data.success) {
+      SetCartItem((prev) => {
+        const newCart = { ...prev };
+        delete newCart[itemId];
+        return newCart;
+      });
+    } else {
+      console.error("Failed to delete item from cart:", response.data.message);
+    }
+  } catch (error) {
+    console.error("Error deleting item from cart:", error.response?.data || error.message);
+  }
+};
+
+
   // Clear the cart
   const clearCart = async () => {
     if (!token) return;
@@ -239,6 +264,7 @@ const RemoveFromCart = async (itemId) => {
     backendUrl,
     saveTokenToLocalStorage,
     SetCartItem,
+    DeleteItemFromCart,
   };
 
   return (
