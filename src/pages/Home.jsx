@@ -183,7 +183,7 @@ const Home = () => {
             </button>
             <div className="d-flex overflow-x-auto" style={{ width: "80%" }}>
               {loading ? (
-                <div>Loading...</div>
+                <div>Loading... PLEASE WAIT PRODUCT IS LOADING </div>
               ) : (
                 products.slice(carouselIndex, carouselIndex + 4).map((product) => (
                   <div key={product._id} className="col-6 col-sm-4 col-md-3 mb-4 product-card">
