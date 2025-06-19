@@ -35,6 +35,100 @@
   }
 }
 
+/* Mobile-Only Styles */
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none !important;
+  }
+
+  .mobile-bottom-nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    height: 60px;
+    width: 100%;
+    background-color: white;
+    border-top: 1px solid #ddd;
+    z-index: 99;
+    box-shadow: 0 -1px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .mobile-nav-icon {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    font-size: 20px;
+    color: #333;
+    text-decoration: none;
+    position: relative;
+    cursor: pointer;
+  }
+
+  .mobile-nav-icon span {
+    font-size: 12px;
+    margin-top: 2px;
+  }
+
+  .mobile-nav-icon:hover,
+  .mobile-nav-icon.active-link {
+    color: #fa2525;
+  }
+
+  .bottom-cart-count {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    background-color: #e53935;
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid white;
+  }
+
+  .mobile-search-wrapper {
+    padding: 10px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 60px;
+    z-index: 98;
+  }
+
+  .mobile-search-wrapper input {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    outline: none;
+  }
+}
+
+/* Search Toggle Button */
+.search-toggle-button {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  box-shadow: none;
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+  font-size: 20px;
+  cursor: pointer;
+}
+
 /* Navbar Styling */
 .custom-navbar {
   display: flex;
@@ -120,16 +214,13 @@
   align-items: center;
   border-radius: 4px;
   overflow: hidden;
+  color: white;
+  border: none;
+  cursor: pointer;
 }
 
 ul {
   padding-left: 0rem !important;
-}
-
-.custom-navbar .search-bar {
-  color: white;
-  border: none;
-  cursor: pointer;
 }
 
 .cart {
@@ -140,9 +231,9 @@ ul {
 
 .cart .cart-count {
   position: absolute;
-  top: -8px; /* Adjust this value for vertical positioning */
-  right: -10px; /* Adjust this value for horizontal positioning */
-  background-color: #e53935; /* Bright red for visibility */
+  top: -8px;
+  right: -10px;
+  background-color: #e53935;
   color: white;
   font-size: 12px;
   font-weight: bold;
@@ -153,21 +244,12 @@ ul {
   align-items: center;
   justify-content: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  border: 2px solid white; /* Optional: Add a white border for better contrast */
-  z-index: 10; /* Ensure it appears above the cart icon */
+  border: 2px solid white;
+  z-index: 10;
 }
 
 .cart svg {
-  font-size: 24px; /* Adjust cart icon size if needed */
-}
-
-
-
-/* Add to your Navbar.css */
-.search-bar {
-  position: relative;
-  display: flex;
-  align-items: center;
+  font-size: 24px;
 }
 
 .search-bar input {
@@ -181,7 +263,7 @@ ul {
 
 .search-bar.active input {
   display: inline-block;
-  width: 200px; /* Adjust the width as desired */
+  width: 200px;
 }
 
 .search-bar button {
@@ -191,14 +273,6 @@ ul {
   font-size: 16px;
 }
 
-.search-toggle-button {
-  background: none;
-  border: none;
-  display: block !important;
-  font-size: 18px;
-  color: #333;
-  cursor: pointer;
-}
 .custom-navbar .search-bar input {
   width: 250px;
   padding: 8px;
@@ -227,14 +301,10 @@ ul {
 
 .custom-navbar .wishlist a:hover,
 .custom-navbar .cart a:hover,
-.custom-navbar .profile a:hover
-
-
-{
+.custom-navbar .profile a:hover {
   color: #fa2525;
 }
 
-/* Mobile View Adjustments */
 @media (max-width: 768px) {
   .custom-navbar .navbar-logo {
     position: absolute;
@@ -242,8 +312,9 @@ ul {
     transform: translateX(-50%);
     z-index: 2;
   }
-
-  /* Hide Navbar Links by Default */
+  .navbar-toggle{
+    display: block !important;
+  }
   .custom-navbar .navbar-links {
     display: none;
     position: absolute;
@@ -261,27 +332,16 @@ ul {
     transition: all 0.3s ease-in-out;
   }
 
-  /* Show Navbar Links When Active */
   .navbar-links.active {
     display: flex;
     transform: translateY(0);
     opacity: 1;
   }
 
-  /* Push the content down when the menu is active */
   body.menu-open {
     overflow: hidden;
   }
 
-  .menu-push {
-    transition: margin-top 0.3s ease-in-out;
-  }
-
-  .menu-push.active {
-    margin-top: 200px; /* Adjust this value based on the height of the menu */
-  }
-
-  /* Hamburger Icon */
   .navbar-toggle {
     display: block;
     background-color: #ffffff;
@@ -291,70 +351,23 @@ ul {
     z-index: 5;
     position: absolute;
     left: 10px;
-    top: 8px;
+    top: 15px;
   }
 
-  .navbar-toggle span {
-    display: block;
-    width: 25px;
-    height: 3px;
-    background-color: #fff;
-    margin: 5px 0;
-  }
-
-  /* Adjust Navbar Actions */
   .custom-navbar .navbar-actions {
     position: absolute;
     right: 15px;
     top: 15px;
     z-index: 2;
   }
-
-  /* Adjust Search Bar in Mobile */
-  .custom-navbar .search-bar {
-    width: calc(100% - 80px); /* Leave space for the hamburger */
-    z-index: 1;
-  }
-
-  .custom-navbar .search-bar input {
-    width: 100%;
-    padding: 6px;
-    font-size: 12px;
-  }
-
-  .custom-navbar .wishlist a,
-  .custom-navbar .cart a,
-  .custom-navbar .profile a {
-    font-size: 20px;
-    color: #333;
-  }
-
-  .custom-navbar .wishlist a:hover,
-  .custom-navbar .cart a:hover,
-  .custom-navbar .profile a:hover {
-    color: #fa2525;
-  }
 }
 
-@media (max-width: 1024px) {
-  .custom-navbar .navbar-links ul {
-    gap: 20px;
-  }
-
-  .custom-navbar .navbar-actions {
-    gap: 10px;
-  }
-
-  .custom-navbar .search-bar input {
-    width: 100%;
-  }
-
-  .custom-navbar .search-bar input::placeholder {
-    font-size: 12px;
+@media (min-width: 769px) {
+  .mobile-bottom-nav,
+  .mobile-nav-icon {
+    display: none !important;
   }
 }
-
-[type=button], [type=reset], [type=submit], button {
-  -webkit-appearance: button;
+.navbar-toggle{
   display: none;
 }

@@ -1,7 +1,15 @@
 import { useState, useContext, useEffect } from "react";
+import { useLocation, NavLink } from "react-router-dom";
 import logo from "../assets/logo.png";
-import { NavLink } from "react-router-dom";
-import { FaShoppingCart, FaHeart, FaSearch, FaUser, FaBars, FaTimes } from "react-icons/fa";
+import {
+  FaShoppingCart,
+  FaHeart,
+  FaSearch,
+  FaUser,
+  FaBars,
+  FaTimes,
+  FaHome,
+} from "react-icons/fa";
 import "./Navbar.css";
 import { ShopContext } from "../../context/ShopContext";
 
@@ -9,21 +17,25 @@ const Navbar = () => {
   const [menuActive, setMenuActive] = useState(false);
   const [searchActive, setSearchActive] = useState(false);
   const [cartCount, setCartCount] = useState(0);
+  const location = useLocation();
 
-  // Context values
-  const { SetSearch: setSearchQuery, performSearch, CartItem } = useContext(ShopContext);
+  const { SetSearch: setSearchQuery, performSearch, CartItem } =
+    useContext(ShopContext);
 
-  // Calculate cart count only when CartItem changes
   useEffect(() => {
     const count = Object.values(CartItem || {}).reduce((total, quantity) => {
       return total + (Number(quantity) || 0);
     }, 0);
     setCartCount(count);
-  }, [CartItem]); // Runs when CartItem changes
+  }, [CartItem]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
+
+  useEffect(() => {
+    setSearchActive(false);
+  }, [location]);
 
   const handleToggleMenu = () => {
     setMenuActive((prev) => !prev);
@@ -37,7 +49,7 @@ const Navbar = () => {
   };
 
   const handleToggleSearch = () => {
-    setSearchActive(!searchActive);
+    setSearchActive((prev) => !prev);
   };
 
   const handleSearchInput = (e) => {
@@ -54,7 +66,9 @@ const Navbar = () => {
       {/* Sale Banner */}
       <div className="sale">
         Summer Sale For All Swim Suits And Free Express Delivery - OFF 50%!
-        <NavLink to="/"><span>Shop Now</span></NavLink>
+        <NavLink to="/">
+          <span>Shop Now</span>
+        </NavLink>
       </div>
 
       {/* Navbar */}
@@ -75,65 +89,124 @@ const Navbar = () => {
         <div className={`navbar-links ${menuActive ? "active" : ""}`}>
           <ul>
             <li>
-              <NavLink to="/" className={({ isActive }) => (isActive ? "active-link" : "")} onClick={handleLinkClick}>
+              <NavLink
+                to="/"
+                className={({ isActive }) => (isActive ? "active-link" : "")}
+                onClick={handleLinkClick}
+              >
                 Home
               </NavLink>
             </li>
             <li>
-              <NavLink to="/contact" className={({ isActive }) => (isActive ? "active-link" : "")} onClick={handleLinkClick}>
+              <NavLink
+                to="/contact"
+                className={({ isActive }) => (isActive ? "active-link" : "")}
+                onClick={handleLinkClick}
+              >
                 Contact
               </NavLink>
             </li>
             <li>
-              <NavLink to="/about" className={({ isActive }) => (isActive ? "active-link" : "")} onClick={handleLinkClick}>
+              <NavLink
+                to="/about"
+                className={({ isActive }) => (isActive ? "active-link" : "")}
+                onClick={handleLinkClick}
+              >
                 About
               </NavLink>
             </li>
             <li>
-              <NavLink to="/orders" className={({ isActive }) => (isActive ? "active-link" : "")} onClick={handleLinkClick}>
+              <NavLink
+                to="/orders"
+                className={({ isActive }) => (isActive ? "active-link" : "")}
+                onClick={handleLinkClick}
+              >
                 Orders
               </NavLink>
             </li>
           </ul>
         </div>
 
-        {/* Navbar Actions */}
-        <div className="navbar-actions">
-          {/* Search Bar */}
+        {/* Desktop Actions */}
+        <div className="navbar-actions desktop-only">
           <div className={`search-bar ${searchActive ? "active" : ""}`}>
             <button className="search-toggle-button" onClick={handleToggleSearch}>
               {searchActive ? <FaTimes /> : <FaSearch />}
             </button>
-            {searchActive && (
-              <form onSubmit={handleSearchSubmit}>
-                <input
-                  type="text"
-                  placeholder="What are you looking for?"
-                  onChange={handleSearchInput}
-                />
-                <button type="submit">Search</button>
-              </form>
-            )}
           </div>
 
-          {/* Wishlist */}
           <div className="wishlist">
-            <NavLink to="/wishlist"><FaHeart /></NavLink>
-          </div>
-
-          {/* Cart */}
-          <div className="cart">
-            <NavLink to="/cart">
-              <FaShoppingCart />
-              <div className="cart-count">{cartCount}</div> {/* Always shows a number */}
+            <NavLink to="/wishlist">
+              <FaHeart />
             </NavLink>
           </div>
 
-          {/* Profile */}
+          <div className="cart">
+            <NavLink to="/cart">
+              <FaShoppingCart />
+              <div className="cart-count">{cartCount}</div>
+            </NavLink>
+          </div>
+
           <div className="profile">
-            <NavLink to="/profile"><FaUser /></NavLink>
+            <NavLink to="/profile">
+              <FaUser />
+            </NavLink>
           </div>
         </div>
+      </div>
+
+      {/* Mobile Search */}
+      {searchActive && (
+        <div className="mobile-search-wrapper">
+          <form onSubmit={handleSearchSubmit}>
+            <input
+              type="text"
+              placeholder="What are you looking for?"
+              onChange={handleSearchInput}
+              autoFocus
+            />
+          </form>
+        </div>
+      )}
+
+      {/* Mobile Bottom Navigation */}
+      <div className="mobile-bottom-nav">
+        <NavLink
+          to="/"
+          className={({ isActive }) => `mobile-nav-icon ${isActive ? "active-link" : ""}`}
+          onClick={handleLinkClick}
+        >
+          <FaHome />
+          <span>Home</span>
+        </NavLink>
+
+        <div
+          className={`mobile-nav-icon ${searchActive ? "active-link" : ""}`}
+          onClick={handleToggleSearch}
+        >
+          <FaSearch />
+          <span>Search</span>
+        </div>
+
+        <NavLink
+          to="/cart"
+          className={({ isActive }) => `mobile-nav-icon ${isActive ? "active-link" : ""}`}
+        >
+          <FaShoppingCart />
+          {cartCount > 0 && (
+            <span className="bottom-cart-count">{cartCount}</span>
+          )}
+          <span>Cart</span>
+        </NavLink>
+
+        <NavLink
+          to="/profile"
+          className={({ isActive }) => `mobile-nav-icon ${isActive ? "active-link" : ""}`}
+        >
+          <FaUser />
+          <span>Profile</span>
+        </NavLink>
       </div>
     </div>
   );
