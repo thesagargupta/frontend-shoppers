@@ -238,10 +238,10 @@ body {
         font-size: 1.1em;
     }
     .current-price {
-        font-size: 1.3em;
+        font-size: 1em;
     }
     .old-price {
-        font-size: 1em;
+        font-size: 0.8em;
     }
     .product-details{
         gap: 0px !important;
