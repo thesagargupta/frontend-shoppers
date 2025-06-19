@@ -12,7 +12,7 @@ import {
   FaUndoAlt,
 } from "react-icons/fa";
 import CountUp from "react-countup";
-import sagar from "../assets/sagar.jpg";
+import sagar from "../assets/photosagar.jpg";
 import "intersection-observer"; // Polyfill for IntersectionObserver
 
 

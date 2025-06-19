@@ -271,4 +271,7 @@ body {
       width: 60px;
       height: 60px;
     }
+    .managed{
+    padding-bottom: 50px;
+  }
 }

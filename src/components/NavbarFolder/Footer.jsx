@@ -75,7 +75,7 @@ const Footer = () => {
       </div>
       <div className="footer-bottom">
         <p className='copy'>&copy; Copyright Shopers 2025. All rights reserved</p>
-        <p>Managed by TehelkaDevelopers</p>
+        <p className="managed">Managed by TehelkaDevelopers</p>
       </div>
     </footer>
   );
