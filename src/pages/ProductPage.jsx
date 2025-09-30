@@ -8,10 +8,12 @@ import "./ProductPage.css";
 import Suggestion from "./Suggestion";
 import toast, { Toaster } from "react-hot-toast";
 import { ShopContext } from "../context/ShopContext";
+import { Skeleton } from "@mui/material";
 
 const ProductPage = () => {
   const { id } = useParams(); // Get product ID from URL params
   const [product, setProduct] = useState(null); // Product data
+  const [loading, setLoading] = useState(true); // Loading state
   const [isWishlisted, setIsWishlisted] = useState(false); // Wishlist state
   const { CartItem, AddToCart, RemoveFromCart, token } =
     useContext(ShopContext);
@@ -45,11 +47,13 @@ const ProductPage = () => {
       } catch (error) {
         console.error("Error fetching product data:", error);
         setProduct(null);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchProductData();
-  }, [id]);
+  }, [id, backendUrl]);
 
   const handleImageChange = (image) => {
     document.getElementById("main-product-image").src = image;
@@ -68,6 +72,66 @@ const ProductPage = () => {
       navigate("/place-order");
     }
   };
+
+  if (loading) {
+    return (
+      <div className="product-page">
+        <div className="product-details">
+          {/* Product Gallery Skeleton */}
+          <div className="product-gallery">
+            <div className="main-image">
+              <Skeleton variant="rectangular" width="100%" height={400} />
+            </div>
+            <div className="thumbnails">
+              {Array.from({ length: 4 }, (_, i) => (
+                <Skeleton key={i} variant="rectangular" width={80} height={80} style={{ marginRight: 10 }} />
+              ))}
+            </div>
+          </div>
+
+          {/* Product Info Skeleton */}
+          <div className="product-info">
+            <Skeleton variant="text" width="80%" height={40} />
+            <Skeleton variant="text" width="60%" height={20} />
+            <Skeleton variant="text" width="40%" height={30} />
+            <Skeleton variant="text" width="100%" height={20} />
+            <Skeleton variant="text" width="100%" height={20} />
+            <Skeleton variant="text" width="100%" height={20} />
+            <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
+              <Skeleton variant="rectangular" width={150} height={40} />
+              <Skeleton variant="rectangular" width={150} height={40} />
+            </div>
+          </div>
+        </div>
+
+        {/* Delivery Info Skeleton */}
+        <div className="delivery-info">
+          <div className="info-item">
+            <Skeleton variant="text" width="60%" height={20} />
+            <Skeleton variant="text" width="80%" height={15} />
+          </div>
+          <div className="info-item">
+            <Skeleton variant="text" width="60%" height={20} />
+            <Skeleton variant="text" width="80%" height={15} />
+          </div>
+        </div>
+
+        {/* Suggested Items Skeleton */}
+        <div className="suggested-item">
+          <Skeleton variant="text" width="30%" height={30} style={{ marginBottom: 20 }} />
+          <div style={{ display: 'flex', gap: 20 }}>
+            {Array.from({ length: 4 }, (_, i) => (
+              <div key={i} style={{ flex: 1 }}>
+                <Skeleton variant="rectangular" width="100%" height={200} />
+                <Skeleton variant="text" width="80%" height={20} style={{ marginTop: 10 }} />
+                <Skeleton variant="text" width="60%" height={20} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (!product) {
     return (

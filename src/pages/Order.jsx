@@ -3,6 +3,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { ShopContext } from "../context/ShopContext";
 import { useNavigate } from "react-router-dom";
 import "./Order.css"; // Ensure necessary styles are included
+import { Skeleton } from "@mui/material";
 
 const Order = () => {
   const { backendUrl, token, setToken } = useContext(ShopContext);
@@ -53,7 +54,50 @@ const Order = () => {
   }, [backendUrl, token]);
 
   if (isLoading) {
-    return <div>Loading orders...</div>;
+    return (
+      <div className="order-container">
+        <Skeleton variant="text" width="200px" height={40} style={{ marginBottom: 20, marginLeft: 'auto', marginRight: 'auto' }} />
+        <div className="orders-list">
+          {Array.from({ length: 3 }, (_, i) => (
+            <div key={i} className="order-item">
+              <div className="order-header">
+                <Skeleton variant="text" width="150px" height={30} />
+                <Skeleton variant="text" width="120px" height={20} />
+                <Skeleton variant="text" width="180px" height={20} />
+              </div>
+
+              <div className="order-items">
+                <Skeleton variant="text" width="80px" height={24} style={{ marginBottom: 10 }} />
+                {Array.from({ length: 2 }, (_, j) => (
+                  <div key={j} className="order-item-detail">
+                    <Skeleton variant="rectangular" width={80} height={80} />
+                    <div className="order-item-info">
+                      <Skeleton variant="text" width="150px" height={20} />
+                      <Skeleton variant="text" width="100px" height={18} />
+                      <Skeleton variant="text" width="80px" height={18} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="order-summary">
+                <Skeleton variant="text" width="120px" height={24} />
+                <Skeleton variant="text" width="100px" height={20} />
+              </div>
+
+              <div className="order-shipping-details">
+                <Skeleton variant="text" width="140px" height={24} />
+                <Skeleton variant="text" width="120px" height={18} />
+                <Skeleton variant="text" width="200px" height={18} />
+                <Skeleton variant="text" width="150px" height={18} />
+                <Skeleton variant="text" width="120px" height={18} />
+                <Skeleton variant="text" width="140px" height={18} />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
   }
 
   if (orders.length === 0) {
