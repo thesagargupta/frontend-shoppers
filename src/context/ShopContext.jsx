@@ -20,6 +20,7 @@ const ShopContextProvider = ({ children }) => {
   const [ShowSearch, SetShowSearch] = useState(true);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [products, setProducts] = useState([]);
+  const [productsLoading, setProductsLoading] = useState(true);
   const [token, setToken] = useState(""); // Token for authentication
   const navigate = useNavigate();
   const backendUrl = import.meta.env.VITE_BACKEND_URL // Backend URL from .env file
@@ -46,8 +47,10 @@ const ShopContextProvider = ({ children }) => {
         } else {
           console.error("Failed to fetch products:", response.data.message);
         }
+        setProductsLoading(false);
       } catch (error) {
         console.error("Error fetching products:", error.message);
+        setProductsLoading(false);
       }
     };
     fetchProducts();
@@ -247,6 +250,7 @@ const DeleteItemFromCart = async (itemId) => {
 
   const contextValue = {
     products,
+    productsLoading,
     filteredProducts,
     CartItem,
     AddToCart,

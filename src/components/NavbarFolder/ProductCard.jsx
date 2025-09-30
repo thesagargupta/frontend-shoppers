@@ -4,13 +4,38 @@ import { Link } from "react-router-dom";
 import './ProductCard.css';
 import PropTypes from 'prop-types';
 import { ShopContext } from "../../context/ShopContext";
+import { Skeleton } from "@mui/material";
 
 
-const ProductCard = ({ product }) => {
-  // Destructuring properties from product prop
-  const { _id, image, name, newprice, oldprice, discount, rating } = product;
+const ProductCard = ({ product, loading = false }) => {
   const { CartItem, AddToCart, RemoveFromCart } = useContext(ShopContext);
   const [isWishlisted, setIsWishlisted] = useState(false);
+
+  if (loading) {
+    return (
+      <div className="product-card">
+        <div className="product-image" style={{ position: 'relative' }}>
+          <Skeleton variant="rectangular" width="100%" height={200} />
+          <Skeleton variant="circular" width={30} height={30} style={{ position: 'absolute', top: 10, right: 10 }} />
+        </div>
+        <div className="product-info">
+          <div className="link-area">
+            <Skeleton variant="text" width="90%" height={24} />
+            <Skeleton variant="text" width="60%" height={20} />
+            <div style={{ display: 'flex', gap: 2 }}>
+              {Array.from({ length: 5 }, (_, i) => (
+                <Skeleton key={i} variant="circular" width={16} height={16} />
+              ))}
+            </div>
+          </div>
+          <Skeleton variant="rectangular" width="100%" height={40} />
+        </div>
+      </div>
+    );
+  }
+
+  // Destructuring properties from product prop
+  const { _id, image, name, newprice, oldprice, discount, rating } = product;
 
   // Handle wishlist button toggle
   const handleWishlistClick = () => {
@@ -105,7 +130,8 @@ ProductCard.propTypes = {
     oldprice: PropTypes.number, // Fixed oldprice to oldPrice for consistency
     discount: PropTypes.number,
     rating: PropTypes.number.isRequired,
-  }).isRequired,
+  }),
+  loading: PropTypes.bool,
 };
 
 export default ProductCard;

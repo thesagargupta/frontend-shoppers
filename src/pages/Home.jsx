@@ -17,6 +17,7 @@ const Home = () => {
   const [products, setProducts] = useState([]); // State to hold products from backend
   const [bestSellingProducts, setBestSellingProducts] = useState([]); // State to hold best selling products
   const [loading, setLoading] = useState(true); // Loading state to handle async fetching
+  const [bestSellingLoading, setBestSellingLoading] = useState(true); // Loading state for best selling products
   const backendUrl = import.meta.env.VITE_BACKEND_URL;  // Backend URL from .env file
 
   // Function to shuffle and get random products
@@ -59,8 +60,10 @@ const Home = () => {
         } else {
           console.error('API did not return an array of best-selling products:', data);
         }
+        setBestSellingLoading(false);
       } catch (error) {
         console.error('Error fetching best-selling products:', error);
+        setBestSellingLoading(false);
       }
     };
 
@@ -183,7 +186,11 @@ const Home = () => {
             </button>
             <div className="d-flex overflow-x-auto" style={{ width: "80%" }}>
               {loading ? (
-                <div>Loading... PLEASE WAIT PRODUCT IS LOADING </div>
+                Array.from({ length: 4 }, (_, i) => (
+                  <div key={`skeleton-${i}`} className="col-6 col-sm-4 col-md-3 mb-4 product-card">
+                    <ProductCard loading={true} />
+                  </div>
+                ))
               ) : (
                 products.slice(carouselIndex, carouselIndex + 4).map((product) => (
                   <div key={product._id} className="col-6 col-sm-4 col-md-3 mb-4 product-card">
@@ -199,7 +206,11 @@ const Home = () => {
 
           <div className="row d-md-none">
             {loading ? (
-              <div>Loading...</div>
+              Array.from({ length: 4 }, (_, i) => (
+                <div key={`skeleton-mobile-${i}`} className="col-6 col-sm-4 col-md-3 mb-4">
+                  <ProductCard loading={true} />
+                </div>
+              ))
             ) : (
               products.slice(0, 4).map((product) => (
                 <div key={product._id} className="col-6 col-sm-4 col-md-3 mb-4">
@@ -218,7 +229,11 @@ const Home = () => {
           {showAllProducts && (
             <div className="row">
               {loading ? (
-                <div>Loading...</div>
+                Array.from({ length: products.length - 4 }, (_, i) => (
+                  <div key={`skeleton-all-${i}`} className="col-6 col-sm-4 col-md-3 mb-4">
+                    <ProductCard loading={true} />
+                  </div>
+                ))
               ) : (
                 products.slice(4).map((product) => (
                   <div key={product._id} className="col-6 col-sm-4 col-md-3 mb-4">
@@ -239,6 +254,7 @@ const Home = () => {
           ...product,
           image: Array.isArray(product.image) ? product.image[0] : product.image, // Ensure image is a string
         }))}
+        loading={bestSellingLoading}
       />
     </div>
   );

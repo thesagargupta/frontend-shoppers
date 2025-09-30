@@ -8,7 +8,7 @@ import Breadcrumbs from "./Breadcrumbs";
 
 const CategoryPage = () => {
   const { categoryName } = useParams();
-  const { products } = useContext(ShopContext); // Access combined products from context
+  const { products, productsLoading } = useContext(ShopContext); // Access combined products from context
 
   // Capitalize the first letter of categoryName
   const formattedCategoryName =
@@ -25,7 +25,11 @@ const CategoryPage = () => {
       <h2 className="Category-product-name">{formattedCategoryName} Products</h2>
 
       <div className="products-list">
-        {filteredProducts.length > 0 ? (
+        {productsLoading ? (
+          Array.from({ length: 8 }, (_, i) => (
+            <ProductCard key={`skeleton-${i}`} loading={true} />
+          ))
+        ) : filteredProducts.length > 0 ? (
           filteredProducts.map((product, index) => (
             <ProductCard
               key={product._id || `product-${index}`} // Ensure unique key from _id

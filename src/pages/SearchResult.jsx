@@ -5,7 +5,7 @@ import { useContext } from "react";
 import { ShopContext } from "../context/ShopContext"; // Import context to access filtered products
 
 const SearchResults = () => {
-  const { filteredProducts } = useContext(ShopContext); // Access filtered products from context
+  const { filteredProducts, productsLoading } = useContext(ShopContext); // Access filtered products from context
 
   const handleLinkClick = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -26,7 +26,11 @@ const SearchResults = () => {
 
       {/* Display products or a message if no results */}
       <div className="products-list">
-        {filteredProducts.length === 0 ? (
+        {productsLoading ? (
+          Array.from({ length: 8 }, (_, i) => (
+            <ProductCard key={`skeleton-${i}`} loading={true} />
+          ))
+        ) : filteredProducts.length === 0 ? (
           <p>No products found. Try a different search.</p>
         ) : (
           filteredProducts.map((product, index) => (
