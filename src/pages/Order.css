@@ -55,7 +55,6 @@ h2, h3, h4, h5 {
 }
 
 .order-item:hover {
-  transform: translateY(-8px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 

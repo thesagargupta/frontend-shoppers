@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useCallback } from "react";
 import { ShopContext } from "../context/ShopContext";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
@@ -14,17 +14,9 @@ const User = () => {
   const [newName, setNewName] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
-  useEffect(() => {
-    if (!token) {
-      navigate("/login");
-    } else {
-      fetchUserDetails();
-      fetchUserOrders();
-    }
-  }, [token, navigate]);
-
-  const fetchUserDetails = async () => {
+  const fetchUserDetails = useCallback(async () => {
     try {
       const response = await fetch(`${backendUrl}/api/user/me`, {
         method: "GET",
@@ -42,9 +34,9 @@ const User = () => {
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [backendUrl, token]);
 
-  const fetchUserOrders = async () => {
+  const fetchUserOrders = useCallback(async () => {
     try {
       const response = await fetch(`${backendUrl}/api/order/userorders`, {
         method: "POST",
@@ -62,7 +54,23 @@ const User = () => {
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [backendUrl, token]);
+
+  useEffect(() => {
+    // Check localStorage directly to avoid race condition
+    const storedToken = localStorage.getItem("token");
+    
+    if (!storedToken && !token) {
+      navigate("/login");
+      setIsCheckingAuth(false);
+    } else {
+      setIsCheckingAuth(false);
+      if (token || storedToken) {
+        fetchUserDetails();
+        fetchUserOrders();
+      }
+    }
+  }, [token, navigate, fetchUserDetails, fetchUserOrders]);
 
   const handleLogout = () => {
     setToken(null);
@@ -108,6 +116,20 @@ const User = () => {
   const capitalizeName = (name) => {
     return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
   };
+
+  // Show loading while checking authentication
+  if (isCheckingAuth) {
+    return (
+      <div className="user-container">
+        <Toaster position="top-center" reverseOrder={false} />
+        <div className="user-card">
+          <div className="loading">
+            <p>Loading...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="user-container">

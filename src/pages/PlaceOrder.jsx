@@ -5,6 +5,8 @@ import "./PlaceOrder.css";
 import { useForm } from "react-hook-form";
 import toast, { Toaster } from "react-hot-toast";
 import { Skeleton } from "@mui/material";
+import { FaMoneyBillWave, FaCreditCard, FaShippingFast, FaShieldAlt, FaMapMarkerAlt, FaPhone, FaUser } from "react-icons/fa";
+import { SiRazorpay } from "react-icons/si";
 const PlaceOrder = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -244,6 +246,15 @@ const PlaceOrder = () => {
       });
 
       if (response.ok) {
+        const responseData = await response.json();
+
+        // Handle Razorpay payment
+        if (paymentMethod === "razorpay") {
+          toast.dismiss(loadingToast);
+          handleRazorpayPayment(responseData, name, phone);
+          return;
+        }
+
         toast.success("Order placed successfully!");
 
         // Clear the cart from both state and local storage
@@ -276,6 +287,83 @@ const PlaceOrder = () => {
       toast.dismiss(loadingToast); // Dismiss the loading toast when request completes
     }
   };
+
+  // Handle Razorpay Payment
+  const handleRazorpayPayment = (orderData, name, phone) => {
+    const options = {
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+      amount: orderData.amount,
+      currency: orderData.currency,
+      name: "Shoopers",
+      description: "Order Payment",
+      order_id: orderData.orderId,
+      handler: async function (response) {
+        // Verify payment
+        const loadingToast = toast.loading("Verifying payment...");
+        try {
+          const verifyResponse = await fetch(
+            `${backendUrl}/api/order/verifyRazorpay`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+                dbOrderId: orderData.dbOrderId,
+              }),
+            }
+          );
+
+          if (verifyResponse.ok) {
+            toast.success("Payment verified successfully!");
+
+            // Clear the cart from both state and local storage
+            SetCartItem({});
+            localStorage.removeItem("cartItems");
+
+            // Call the backend API to clear the cart in the database
+            await fetch(`${backendUrl}/api/cart/clear`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            });
+
+            // Navigate to the order confirmation page
+            setTimeout(() => {
+              navigate("/orders");
+            }, 2000);
+          } else {
+            toast.error("Payment verification failed!");
+          }
+        } catch (error) {
+          toast.error("Error verifying payment!");
+          console.error("Payment verification error:", error);
+        } finally {
+          toast.dismiss(loadingToast);
+        }
+      },
+      prefill: {
+        name: name,
+        contact: phone,
+      },
+      theme: {
+        color: "#3399cc",
+      },
+    };
+
+    const razorpay = new window.Razorpay(options);
+    razorpay.on("payment.failed", function (response) {
+      toast.error("Payment failed! Please try again.");
+      console.error("Payment failed:", response.error);
+    });
+    razorpay.open();
+  };
   // Utility functions for validation
   const validatePhone = (phone) => {
     const phonePattern = /^[6-9]\d{9}$/;
@@ -300,159 +388,252 @@ const PlaceOrder = () => {
     <div className="place-order-container">
       <Toaster position="top-center" reverseOrder={false} />
 
-      <h2 className="page-title">Place Your Order</h2>
+      <div className="page-header">
+        <FaShippingFast className="header-icon" />
+        <h2 className="page-title">Complete Your Order</h2>
+        <p className="page-subtitle">Review your cart and enter delivery details</p>
+      </div>
+
+      <div className="trust-badges">
+        <div className="badge">
+          <FaShieldAlt className="badge-icon" />
+          <span>Secure Payment</span>
+        </div>
+        <div className="badge">
+          <FaShippingFast className="badge-icon" />
+          <span>Fast Delivery</span>
+        </div>
+        <div className="badge">
+          <FaMoneyBillWave className="badge-icon" />
+          <span>Easy Returns</span>
+        </div>
+      </div>
 
       <div className="content-wrapper">
-        {/* Order Summary Section */}
-        <div className="order-summary">
-          <h3>Order Summary</h3>
-          {productsInCart.map((product) => (
-            <div key={product._id} className="order-item">
-              <img
-                src={getProductImages(product)} // Use the helper function for image
-                alt={product.name}
-                className="order-item-image"
-              />
-              <div className="order-item-details">
-                <h4>{product.name}</h4>
-                <p>
-                  Price: ₹
-                  {product.newprice ? product.newprice.toFixed(2) : "0.00"}
-                </p>
-                <p>Quantity: {cartItems[product._id]}</p>
-              </div>
-            </div>
-          ))}
-          <hr />
-          <h3 className="total-amount">
-            Total Amount: ₹{finalAmount.toFixed(2)}
-          </h3>
-        </div>
-
         {/* Order Form Section */}
         <div className="order-form">
-          <h3>Shipping Details</h3>
+          <div className="section-header">
+            <FaMapMarkerAlt className="section-icon" />
+            <h3>Shipping Information</h3>
+          </div>
+          
           <form onSubmit={onSubmitHandler}>
-            <label htmlFor="name">Full Name:</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              placeholder="Enter your full name"
-              required
-            />
+            <div className="form-row">
+              <div className="input-group">
+                <label htmlFor="name">
+                  <FaUser className="label-icon" />
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  placeholder="Enter your full name"
+                  required
+                />
+              </div>
 
-            <label htmlFor="phone">Phone Number:</label>
-            <input
-              type="tel"
-              id="phone"
-              name="phone"
-              placeholder="Enter your phone number"
-              required
-            />
+              <div className="input-group">
+                <label htmlFor="phone">
+                  <FaPhone className="label-icon" />
+                  Phone Number
+                </label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  placeholder="Enter your phone number"
+                  required
+                />
+              </div>
+            </div>
 
-            <label htmlFor="house-number">PinCode:</label>
-            <input
-              type="text"
-              id="pin-code"
-              name="pincode"
-              placeholder="Enter your pin code"
-              required
-              onChange={handlePincodeChange}
-              pattern="^\d{6}$" // Ensure the pincode is 6 digits
-              title="Pincode should be a 6-digit number"
-            />
+            <div className="form-row">
+              <div className="input-group">
+                <label htmlFor="pin-code">
+                  <FaMapMarkerAlt className="label-icon" />
+                  Pincode
+                </label>
+                <input
+                  type="text"
+                  id="pin-code"
+                  name="pincode"
+                  placeholder="Enter 6-digit pincode"
+                  required
+                  onChange={handlePincodeChange}
+                  pattern="^\d{6}$"
+                  title="Pincode should be a 6-digit number"
+                />
+              </div>
 
-            <label htmlFor="apartment">Apartment/Flat/Landmark:</label>
-            <input
-              type="text"
-              id="apartment"
-              required
-              name="apartment"
-              placeholder="Enter your apartment/flat/landmark name (if applicable)"
-            />
+              <div className="input-group">
+                <label htmlFor="apartment">Apartment/Flat No.</label>
+                <input
+                  type="text"
+                  id="apartment"
+                  required
+                  name="apartment"
+                  placeholder="House/Flat/Building name"
+                />
+              </div>
+            </div>
 
-            <label htmlFor="landmark">Locality:</label>
-            <input
-              type="text"
-              id="landmark"
-              name="landmark"
-              value={city} // Always bind the city input value to the state
-              placeholder={
-                manualCity
-                  ? "Enter your city"
-                  : "City will be auto-filled based on pincode"
-              }
-              onChange={manualCity ? (e) => setCity(e.target.value) : null} // Allow manual city input if selected
-              required
-            />
-
-            <div className="form-check">
+            <div className="input-group full-width">
+              <label htmlFor="landmark">Locality/Street</label>
               <input
-                type="checkbox"
-                className="form-check-input"
-                id="manualCity"
-                checked={manualCity}
-                onChange={handleManualCityToggle}
+                type="text"
+                id="landmark"
+                name="landmark"
+                value={city}
+                placeholder={
+                  manualCity
+                    ? "Enter your locality"
+                    : "Auto-filled based on pincode"
+                }
+                onChange={(e) => setCity(e.target.value)}
+                readOnly={!manualCity}
+                required
               />
-              <label className="form-check-label" htmlFor="manualCity">
-                Enter City Manually
+              <div className="checkbox-inline">
+                <input
+                  type="checkbox"
+                  id="manualCity"
+                  checked={manualCity}
+                  onChange={handleManualCityToggle}
+                />
+                <label htmlFor="manualCity">Enter manually</label>
+              </div>
+            </div>
+
+            <div className="input-group full-width">
+              <label htmlFor="state">State</label>
+              <input
+                type="text"
+                id="state"
+                name="state"
+                value={stateName}
+                placeholder={
+                  manualState
+                    ? "Enter your state"
+                    : "Auto-filled based on pincode"
+                }
+                onChange={(e) => setStateName(e.target.value)}
+                readOnly={!manualState}
+                required
+              />
+              <div className="checkbox-inline">
+                <input
+                  type="checkbox"
+                  id="manualState"
+                  checked={manualState}
+                  onChange={handleManualStateToggle}
+                />
+                <label htmlFor="manualState">Enter manually</label>
+              </div>
+            </div>
+
+            <div className="section-header payment-header">
+              <FaCreditCard className="section-icon" />
+              <h3>Payment Method</h3>
+            </div>
+
+            <div className="payment-options">
+              <label className="payment-option">
+                <input
+                  type="radio"
+                  name="payment"
+                  value="cod"
+                  defaultChecked
+                  required
+                />
+                <div className="payment-card">
+                  <FaMoneyBillWave className="payment-icon cod-icon" />
+                  <div className="payment-info">
+                    <span className="payment-name">Cash on Delivery</span>
+                    <span className="payment-desc">Pay when you receive</span>
+                  </div>
+                </div>
+              </label>
+
+              <label className="payment-option">
+                <input
+                  type="radio"
+                  name="payment"
+                  value="razorpay"
+                  required
+                />
+                <div className="payment-card">
+                  <SiRazorpay className="payment-icon razorpay-icon" />
+                  <div className="payment-info">
+                    <span className="payment-name">Razorpay</span>
+                    <span className="payment-desc">UPI, Cards, NetBanking</span>
+                  </div>
+                </div>
               </label>
             </div>
 
-            <label htmlFor="state">State:</label>
-            <input
-              type="text"
-              id="state"
-              name="state"
-              value={stateName} // Always bind the state input value to the state
-              placeholder={
-                manualState
-                  ? "Enter your state"
-                  : "State will be auto-filled based on pincode"
-              }
-              onChange={
-                manualState ? (e) => setStateName(e.target.value) : null
-              } // Allow manual state input if selected
-              required
-            />
-
-            <div className="form-check">
+            <div className="form-check-box">
               <input
                 type="checkbox"
-                className="form-check-input"
-                id="manualState"
-                checked={manualState}
-                onChange={handleManualStateToggle}
-              />
-              <label className="form-check-label" htmlFor="manualState">
-                Enter State Manually
-              </label>
-            </div>
-
-            <label htmlFor="payment">Prefered Gateway:</label>
-            <select id="payment" name="payment" required>
-              <option value="cod">Cash On Delivery</option>
-              <option value="stripe">Stripe</option>
-              <option value="razorpay">Razorpay</option>
-            </select>
-
-            <div className="form-check">
-              <input
-                type="checkbox"
-                className="form-check-input"
                 id="saveInfo"
                 {...register("saveInfo")}
               />
-              <label className="form-check-label" htmlFor="saveInfo">
-                Save this information for faster check-out next time
+              <label htmlFor="saveInfo">
+                Save this information for faster checkout next time
               </label>
             </div>
 
             <button type="submit" className="place-order-btn">
-              Place Order
+              <FaShieldAlt className="btn-icon" />
+              Complete Order
             </button>
           </form>
+        </div>
+
+        {/* Order Summary Section */}
+        <div className="order-summary">
+          <div className="summary-header">
+            <h3>Order Summary</h3>
+            <span className="item-count">{productsInCart.length} items</span>
+          </div>
+          
+          <div className="summary-items">
+            {productsInCart.map((product) => (
+              <div key={product._id} className="order-item">
+                <img
+                  src={getProductImages(product)}
+                  alt={product.name}
+                  className="order-item-image"
+                />
+                <div className="order-item-details">
+                  <h4>{product.name}</h4>
+                  <p className="item-price">
+                    ₹{product.newprice ? product.newprice.toFixed(2) : "0.00"}
+                  </p>
+                  <p className="item-quantity">Qty: {cartItems[product._id]}</p>
+                </div>
+                <div className="item-total">
+                  ₹{(product.newprice * cartItems[product._id]).toFixed(2)}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="summary-footer">
+            <div className="summary-row">
+              <span>Subtotal</span>
+              <span>₹{finalAmount.toFixed(2)}</span>
+            </div>
+            <div className="summary-row">
+              <span>Shipping</span>
+              <span className="free-tag">FREE</span>
+            </div>
+            <div className="summary-divider"></div>
+            <div className="summary-row total-row">
+              <span>Total Amount</span>
+              <span className="total-amount">₹{finalAmount.toFixed(2)}</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>

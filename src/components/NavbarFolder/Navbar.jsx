@@ -19,7 +19,7 @@ const Navbar = () => {
   const [cartCount, setCartCount] = useState(0);
   const location = useLocation();
 
-  const { SetSearch: setSearchQuery, performSearch, CartItem } =
+  const { SetSearch: setSearchQuery, performSearch, CartItem, Search } =
     useContext(ShopContext);
 
   useEffect(() => {
@@ -156,13 +156,14 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Search */}
+      {/* Search Bar (Mobile & Desktop) */}
       {searchActive && (
-        <div className="mobile-search-wrapper">
+        <div className="search-wrapper">
           <form onSubmit={handleSearchSubmit}>
             <input
               type="text"
               placeholder="What are you looking for?"
+              value={Search}
               onChange={handleSearchInput}
               autoFocus
             />
